@@ -15,12 +15,32 @@ import net.minecraft.world.World;
 
 public class TeapotScreenHandler extends AbstractRecipeScreenHandler<Inventory> {
 	public PlayerInventory playerInv;
+	public Inventory inv;
 	public World world;
 
 	public TeapotScreenHandler(int syncId, PlayerInventory playerInv) {
 		super(ModScreenHandlers.TEAPOT_SCREEN_HANDLER, syncId);
 		this.playerInv = playerInv;
 		this.world = playerInv.player.getWorld();
+
+		this.inv = new SimpleInventory(2);
+
+		this.addSlot(new Slot(inv, 0, 44, 35));
+		this.addSlot(new TeapotOutputSlot(inv, 1, 116, 35));
+
+		// render player hotbar
+		int i = 0;
+		for (;i < 9; i++) {
+			this.addSlot(new Slot(playerInv, i, 8 + i * 18, 142));
+		}
+
+		// render player inv
+		for (int y = 0; y < 3; y++) {
+			for (int x = 0; x < 9; x++) {
+				this.addSlot(new Slot(playerInv, i, 8 + x * 18, 84 + y * 18));
+				i++;
+			}
+		}
 	}
 
 	@Override
@@ -79,36 +99,36 @@ public class TeapotScreenHandler extends AbstractRecipeScreenHandler<Inventory> 
 
 	@Override
 	public void populateRecipeFinder(RecipeMatcher finder) {
-
 	}
 
 	@Override
 	public void clearCraftingSlots() {
+		inv.setStack(0, ItemStack.EMPTY);
 	}
 
 	@Override
 	public boolean matches(Recipe<? super Inventory> recipe) {
-		return false;
+		return recipe.matches(inv, world);
 	}
 
 	@Override
 	public int getCraftingResultSlotIndex() {
-		return 0;
+		return 1;
 	}
 
 	@Override
 	public int getCraftingWidth() {
-		return 0;
+		return 1;
 	}
 
 	@Override
 	public int getCraftingHeight() {
-		return 0;
+		return 1;
 	}
 
 	@Override
 	public int getCraftingSlotCount() {
-		return 0;
+		return 1;
 	}
 
 	@Override

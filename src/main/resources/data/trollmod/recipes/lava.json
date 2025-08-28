@@ -1,0 +1,8 @@
+{
+    "type": "trollmod:teapot",
+    "input": {
+        "item": "minecraft:water_bucket"
+    },
+    "outputItem": "minecraft:lava_bucket",
+    "outputAmount": 3
+}

@@ -3,6 +3,10 @@ package me.illia.trollmod.entity;
 import me.illia.trollmod.damage.ModDamageTypes;
 import me.illia.trollmod.item.ModItems;
 import me.illia.trollmod.Trollmod;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientChunkEvents;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientEntityEvents;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import net.fabricmc.fabric.api.client.networking.v1.ClientLoginConnectionEvents;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -21,6 +25,7 @@ import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldEvents;
 
 public class BoomerangEntity extends ProjectileEntity {
 	public boolean bounced = false;
@@ -105,20 +110,22 @@ public class BoomerangEntity extends ProjectileEntity {
 
 	@Override
 	public void onPlayerCollision(PlayerEntity player) {
-		DamageSources sources = player.getWorld().getDamageSources();
 		if (getOwner() != null && !player.getUuidAsString().equals(getOwner().getUuidAsString())) {
 			this.discard();
 			player.damage(ModDamageTypes.of(player.getWorld(), ModDamageTypes.BOOMERANG_DAMAGE_TYPE), 5);
+
+			setVelocity(getVelocity().multiply(-0.85));
+			bounced = true;
 		} else if (bounced) {
 			ItemStack boomerang = ModItems.BOOMERANG.getDefaultStack();
+
 			if (player instanceof ServerPlayerEntity serverPlayerEntity) {
 				if (damage + 1 < boomerang.getMaxDamage()) {
 					boomerang.damage(1 + damage, getWorld().getRandom(), serverPlayerEntity);
-					if (player.getInventory().getEmptySlot() != -1) {
-						setVelocity(getVelocity().multiply(-0.85));
-						bounced = true;
 
+					if (player.getInventory().getEmptySlot() != -1) {
 						player.getInventory().setStack(player.getInventory().getEmptySlot(), boomerang);
+
 						this.discard();
 					}
 				}

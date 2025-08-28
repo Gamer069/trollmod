@@ -1,5 +1,5 @@
-[10:17:56] [main/INFO] (FabricLoader/GameProvider) Loading Minecraft 1.20.1 with Fabric Loader 0.17.2
-[10:17:56] [main/INFO] (FabricLoader) Loading 59 mods:
+[17:48:43] [main/INFO] (FabricLoader/GameProvider) Loading Minecraft 1.20.1 with Fabric Loader 0.17.2
+[17:48:43] [main/INFO] (FabricLoader) Loading 59 mods:
 	- fabric-api 0.92.6+1.20.1
 	- fabric-api-base 0.4.32+1802ada577
 	- fabric-api-lookup-api-v1 1.6.37+1802ada577
@@ -59,14 +59,14 @@
 	- minecraft 1.20.1
 	- mixinextras 0.5.0
 	- trollmod 1.0-SNAPSHOT
-[10:17:57] [main/INFO] (FabricLoader/Mixin) SpongePowered MIXIN Subsystem Version=0.8.7 Source=file:/home/illia/.gradle/caches/modules-2/files-2.1/net.fabricmc/sponge-mixin/0.16.3+mixin.0.8.7/3e535042688d1265447e52ad86950b7d9678a5fa/sponge-mixin-0.16.3+mixin.0.8.7.jar Service=Knot/Fabric Env=CLIENT
-[10:17:57] [main/INFO] (FabricLoader/Mixin) Loaded Fabric development mappings for mixin remapper!
-[10:17:57] [main/INFO] (FabricLoader/Mixin) Compatibility level set to JAVA_16
-[10:17:57] [main/INFO] (FabricLoader/Mixin) Compatibility level set to JAVA_17
-[10:17:58] [main/INFO] (FabricLoader/MixinExtras|Service) Initializing MixinExtras via com.llamalad7.mixinextras.service.MixinExtrasServiceImpl(version=0.5.0).
-[10:18:00] [Datafixer Bootstrap/INFO] (Minecraft) 188 Datafixer optimizations took 71 milliseconds
-[10:18:01] [Render thread/INFO] (Minecraft) Environment: authHost='https://authserver.mojang.com', accountsHost='https://api.mojang.com', sessionHost='https://sessionserver.mojang.com', servicesHost='https://api.minecraftservices.com', name='PROD'
-[10:18:02] [Render thread/ERROR] (Minecraft) Failed to verify authentication
+[17:48:43] [main/INFO] (FabricLoader/Mixin) SpongePowered MIXIN Subsystem Version=0.8.7 Source=file:/home/illia/.gradle/caches/modules-2/files-2.1/net.fabricmc/sponge-mixin/0.16.3+mixin.0.8.7/3e535042688d1265447e52ad86950b7d9678a5fa/sponge-mixin-0.16.3+mixin.0.8.7.jar Service=Knot/Fabric Env=CLIENT
+[17:48:43] [main/INFO] (FabricLoader/Mixin) Loaded Fabric development mappings for mixin remapper!
+[17:48:43] [main/INFO] (FabricLoader/Mixin) Compatibility level set to JAVA_16
+[17:48:43] [main/INFO] (FabricLoader/Mixin) Compatibility level set to JAVA_17
+[17:48:44] [main/INFO] (FabricLoader/MixinExtras|Service) Initializing MixinExtras via com.llamalad7.mixinextras.service.MixinExtrasServiceImpl(version=0.5.0).
+[17:48:46] [Datafixer Bootstrap/INFO] (Minecraft) 188 Datafixer optimizations took 57 milliseconds
+[17:48:47] [Render thread/INFO] (Minecraft) Environment: authHost='https://authserver.mojang.com', accountsHost='https://api.mojang.com', sessionHost='https://sessionserver.mojang.com', servicesHost='https://api.minecraftservices.com', name='PROD'
+[17:48:48] [Render thread/ERROR] (Minecraft) Failed to verify authentication
 com.mojang.authlib.exceptions.InvalidCredentialsException: Status: 401
 	at com.mojang.authlib.exceptions.MinecraftClientHttpException.toAuthenticationException(MinecraftClientHttpException.java:56) ~[authlib-4.0.43.jar:?]
 	at com.mojang.authlib.yggdrasil.YggdrasilUserApiService.fetchProperties(YggdrasilUserApiService.java:156) ~[authlib-4.0.43.jar:?]
@@ -84,60 +84,97 @@ Caused by: com.mojang.authlib.exceptions.MinecraftClientHttpException: Status: 4
 	at com.mojang.authlib.minecraft.client.MinecraftClient.get(MinecraftClient.java:48) ~[authlib-4.0.43.jar:?]
 	at com.mojang.authlib.yggdrasil.YggdrasilUserApiService.fetchProperties(YggdrasilUserApiService.java:129) ~[authlib-4.0.43.jar:?]
 	... 9 more
-[10:18:02] [Render thread/INFO] (Minecraft) Setting user: Player489
-[10:18:02] [Render thread/INFO] (trollmod) Initting items...
-[10:18:02] [Render thread/INFO] (trollmod) Initting entities
-[10:18:02] [Render thread/INFO] (trollmod) Registering damage types for trollmod...
-[10:18:03] [Render thread/INFO] (Indigo) [Indigo] Registering Indigo renderer!
-[10:18:03] [Render thread/INFO] (Minecraft) Backend library: LWJGL version 3.3.2-snapshot
-[10:18:03] [Render thread/INFO] (Minecraft) [STDERR]: [LWJGL] [ThreadLocalUtil] Unsupported JNI version detected, this may result in a crash. Please inform LWJGL developers.
-[10:18:03] [Render thread/INFO] (Minecraft) Reloading ResourceManager: vanilla, fabric (fabric-mining-level-api-v1, fabric-client-tags-api-v1, fabric-rendering-v0, fabric-commands-v0, fabric-biome-api-v1, fabric-entity-events-v1, fabric-gametest-api-v1, fabric-keybindings-v0, fabric-events-interaction-v0, fabric-particles-v1, fabric-api, fabricloader, fabric-screen-api-v1, fabric-blockrenderlayer-v1, fabric-loot-api-v2, fabric-crash-report-info-v1, fabric-transfer-api-v1, fabric-dimensions-v1, fabric-data-attachment-api-v1, fabric-message-api-v1, fabric-networking-v0, fabric-registry-sync-v0, fabric-containers-v0, fabric-block-api-v1, fabric-renderer-registries-v1, fabric-transitive-access-wideners-v1, fabric-resource-loader-v0, fabric-command-api-v1, fabric-events-lifecycle-v0, fabric-lifecycle-events-v1, fabric-rendering-fluids-v1, fabric-block-view-api-v2, fabric-screen-handler-api-v1, fabric-recipe-api-v1, fabric-sound-api-v1, fabric-game-rule-api-v1, fabric-api-base, fabric-command-api-v2, trollmod, fabric-networking-api-v1, fabric-resource-conditions-api-v1, fabric-api-lookup-api-v1, fabric-loot-tables-v1, fabric-model-loading-api-v1, fabric-renderer-api-v1, fabric-item-group-api-v1, fabric-renderer-indigo, fabric-models-v0, fabric-data-generation-api-v1, fabric-rendering-data-attachment-v1, fabric-rendering-v1, fabric-key-binding-api-v1, fabric-convention-tags-v1, fabric-object-builder-api-v1, fabric-item-api-v1, fabric-content-registries-v0)
-[10:18:03] [Worker-Main-4/INFO] (Minecraft) Found unifont_all_no_pua-15.0.06.hex, loading
-[10:18:04] [Realms Notification Availability checker #1/INFO] (Minecraft) Could not authorize you against Realms server: java.lang.RuntimeException: Failed to parse into SignedJWT: FabricMC
-[10:18:04] [Worker-Main-6/WARN] (Minecraft) Unable to load model: 'trollmod:wooden_teapot#inventory' referenced from: trollmod:wooden_teapot#inventory: java.io.FileNotFoundException: trollmod:models/item/wooden_teapot.json
-[10:18:04] [Render thread/WARN] (Minecraft) Missing sound for event: minecraft:item.goat_horn.play
-[10:18:04] [Render thread/WARN] (Minecraft) Missing sound for event: minecraft:entity.goat.screaming.horn_break
-[10:18:04] [Render thread/INFO] (Minecraft) OpenAL initialized on device Built-in Audio Analog Stereo
-[10:18:04] [Render thread/INFO] (Minecraft) Sound engine started
-[10:18:04] [Render thread/INFO] (Minecraft) Created: 1024x512x4 minecraft:textures/atlas/blocks.png-atlas
-[10:18:04] [Render thread/INFO] (Minecraft) Created: 256x256x4 minecraft:textures/atlas/signs.png-atlas
-[10:18:04] [Render thread/INFO] (Minecraft) Created: 512x512x4 minecraft:textures/atlas/shield_patterns.png-atlas
-[10:18:04] [Render thread/INFO] (Minecraft) Created: 512x512x4 minecraft:textures/atlas/banner_patterns.png-atlas
-[10:18:04] [Render thread/INFO] (Minecraft) Created: 1024x1024x4 minecraft:textures/atlas/armor_trims.png-atlas
-[10:18:04] [Render thread/INFO] (Minecraft) Created: 128x64x4 minecraft:textures/atlas/decorated_pot.png-atlas
-[10:18:04] [Render thread/INFO] (Minecraft) Created: 256x256x4 minecraft:textures/atlas/chest.png-atlas
-[10:18:04] [Render thread/INFO] (Minecraft) Created: 512x256x4 minecraft:textures/atlas/shulker_boxes.png-atlas
-[10:18:04] [Render thread/INFO] (Minecraft) Created: 512x256x4 minecraft:textures/atlas/beds.png-atlas
-[10:18:04] [Render thread/WARN] (Minecraft) Shader rendertype_entity_translucent_emissive could not find sampler named Sampler2 in the specified shader program.
-[10:18:04] [Render thread/INFO] (Minecraft) Created: 256x256x0 minecraft:textures/atlas/particles.png-atlas
-[10:18:04] [Render thread/INFO] (Minecraft) Created: 256x256x0 minecraft:textures/atlas/paintings.png-atlas
-[10:18:04] [Render thread/INFO] (Minecraft) Created: 128x128x0 minecraft:textures/atlas/mob_effects.png-atlas
-[10:18:25] [Render thread/INFO] (Minecraft) Connecting to 192.168.0.72, 41973
-[10:18:27] [Downloader 0/WARN] (Minecraft) Failed to log in: Invalid session (Try restarting your game and the launcher)
-[10:18:33] [Render thread/INFO] (Minecraft) Loaded 2 advancements
-[10:18:33] [Render thread/INFO] (Minecraft) [System] [CHAT] Your game mode has been updated to Survival Mode
-[10:18:33] [Render thread/INFO] (Minecraft) [System] [CHAT] [Player67: Set Player489's game mode to Survival Mode]
-[10:18:47] [Render thread/INFO] (Minecraft) [System] [CHAT] [Player67: Teleported Player67 to Player489]
-[10:18:58] [Render thread/INFO] (Minecraft) [System] [CHAT] [Player67: Gave 1 [Boomerang] to Player67]
-[10:19:00] [Render thread/INFO] (trollmod) Tick 1: Pos=(121.565,68.500,116.304) Vel=(0.043,0.000,-0.499)
-[10:19:05] [Render thread/INFO] (Minecraft) [System] [CHAT] [Player67: Gave 1 [Boomerang] to Player67]
-[10:19:07] [Render thread/INFO] (trollmod) Tick 1: Pos=(121.601,68.500,116.705) Vel=(-0.051,0.000,-0.499)
-[10:19:07] [Render thread/INFO] (trollmod) Tick 2: Pos=(121.550,68.500,116.206) Vel=(-0.052,0.000,-0.500)
-[10:19:08] [Render thread/INFO] (Minecraft) [System] [CHAT] [Player67: Gave 1 [Boomerang] to Player67]
-[10:19:09] [Render thread/INFO] (trollmod) Tick 1: Pos=(121.742,68.500,116.701) Vel=(0.020,0.000,-0.501)
-[10:19:09] [Render thread/INFO] (trollmod) Tick 2: Pos=(121.762,68.500,116.200) Vel=(0.019,0.000,-0.502)
-[10:19:09] [Render thread/INFO] (trollmod) Tick 3: Pos=(121.781,68.500,115.699) Vel=(0.018,0.000,-0.503)
-[10:19:10] [Render thread/INFO] (Minecraft) [System] [CHAT] [Player67: Gave 1 [Boomerang] to Player67]
-[10:19:10] [Render thread/INFO] (trollmod) Tick 1: Pos=(121.629,68.500,116.703) Vel=(-0.036,0.000,-0.500)
-[10:19:11] [Render thread/INFO] (trollmod) Tick 2: Pos=(121.593,68.500,116.203) Vel=(-0.037,0.000,-0.501)
-[10:19:11] [Render thread/INFO] (trollmod) Tick 3: Pos=(121.556,68.500,115.702) Vel=(-0.038,0.000,-0.502)
-[10:19:11] [Render thread/INFO] (Minecraft) [System] [CHAT] [Player67: Gave 1 [Boomerang] to Player67]
-[10:19:12] [Render thread/INFO] (trollmod) Tick 1: Pos=(121.666,68.500,116.701) Vel=(-0.018,0.000,-0.501)
-[10:19:12] [Render thread/INFO] (trollmod) Tick 2: Pos=(121.648,68.500,116.200) Vel=(-0.019,0.000,-0.502)
-[10:19:12] [Render thread/INFO] (trollmod) Tick 3: Pos=(121.629,68.500,115.698) Vel=(-0.020,0.000,-0.503)
-[10:19:12] [Render thread/INFO] (Minecraft) [System] [CHAT] Player489 was obliterated by a boomerang
-[10:19:57] [Render thread/INFO] (Minecraft) Loaded 11 advancements
-[10:20:42] [Render thread/INFO] (Minecraft) [System] [CHAT] Set Player67's game mode to Survival Mode
-[10:21:39] [Render thread/INFO] (Minecraft) [System] [CHAT] Set Player67's game mode to Creative Mode
-[10:21:39] [Render thread/INFO] (Minecraft) [System] [CHAT] Set own game mode to Creative Mode
-[10:21:53] [Render thread/INFO] (Minecraft) Stopping!
+[17:48:48] [Render thread/INFO] (Minecraft) Setting user: Player681
+[17:48:48] [Render thread/INFO] (trollmod) Initting items...
+[17:48:48] [Render thread/INFO] (trollmod) Initting entities
+[17:48:48] [Render thread/INFO] (trollmod) Registering damage types for trollmod...
+[17:48:48] [Render thread/INFO] (Indigo) [Indigo] Registering Indigo renderer!
+[17:48:48] [Render thread/INFO] (Minecraft) Backend library: LWJGL version 3.3.2-snapshot
+[17:48:48] [Render thread/INFO] (Minecraft) [STDERR]: [LWJGL] [ThreadLocalUtil] Unsupported JNI version detected, this may result in a crash. Please inform LWJGL developers.
+[17:48:49] [Render thread/INFO] (Minecraft) Reloading ResourceManager: vanilla, fabric (fabric-renderer-registries-v1, fabric-commands-v0, fabric-renderer-indigo, fabric-block-view-api-v2, trollmod, fabric-key-binding-api-v1, fabric-containers-v0, fabric-biome-api-v1, fabric-item-group-api-v1, fabric-networking-api-v1, fabric-networking-v0, fabric-models-v0, fabric-content-registries-v0, fabric-particles-v1, fabric-convention-tags-v1, fabric-dimensions-v1, fabric-client-tags-api-v1, fabric-rendering-v1, fabric-rendering-data-attachment-v1, fabric-events-interaction-v0, fabric-rendering-v0, fabric-entity-events-v1, fabric-screen-api-v1, fabric-keybindings-v0, fabric-game-rule-api-v1, fabric-block-api-v1, fabric-renderer-api-v1, fabric-screen-handler-api-v1, fabric-crash-report-info-v1, fabric-command-api-v2, fabric-lifecycle-events-v1, fabric-resource-loader-v0, fabric-registry-sync-v0, fabric-object-builder-api-v1, fabric-blockrenderlayer-v1, fabric-message-api-v1, fabric-data-generation-api-v1, fabric-gametest-api-v1, fabric-resource-conditions-api-v1, fabric-command-api-v1, fabric-loot-tables-v1, fabric-transfer-api-v1, fabric-sound-api-v1, fabric-model-loading-api-v1, fabric-data-attachment-api-v1, fabric-events-lifecycle-v0, fabric-api-lookup-api-v1, fabric-api-base, fabric-loot-api-v2, fabric-api, fabric-rendering-fluids-v1, fabric-mining-level-api-v1, fabricloader, fabric-recipe-api-v1, fabric-transitive-access-wideners-v1, fabric-item-api-v1)
+[17:48:49] [Worker-Main-6/INFO] (Minecraft) Found unifont_all_no_pua-15.0.06.hex, loading
+[17:48:49] [Realms Notification Availability checker #1/INFO] (Minecraft) Could not authorize you against Realms server: java.lang.RuntimeException: Failed to parse into SignedJWT: FabricMC
+[17:48:50] [Worker-Main-7/WARN] (Minecraft) Unable to load model: 'trollmod:wooden_teapot#inventory' referenced from: trollmod:wooden_teapot#inventory: java.io.FileNotFoundException: trollmod:models/item/wooden_teapot.json
+[17:48:50] [Render thread/WARN] (Minecraft) Skipped language file: trollmod:lang/en_us.json (com.google.gson.JsonSyntaxException: com.google.gson.stream.MalformedJsonException: Expected ':' at line 4 column 30 path $.death.attack.boomerang)
+[17:48:50] [Render thread/WARN] (Minecraft) Missing sound for event: minecraft:item.goat_horn.play
+[17:48:50] [Render thread/WARN] (Minecraft) Missing sound for event: minecraft:entity.goat.screaming.horn_break
+[17:48:50] [Render thread/INFO] (Minecraft) OpenAL initialized on device Built-in Audio Analog Stereo
+[17:48:50] [Render thread/INFO] (Minecraft) Sound engine started
+[17:48:50] [Render thread/INFO] (Minecraft) Created: 1024x512x4 minecraft:textures/atlas/blocks.png-atlas
+[17:48:50] [Render thread/INFO] (Minecraft) Created: 256x256x4 minecraft:textures/atlas/signs.png-atlas
+[17:48:50] [Render thread/INFO] (Minecraft) Created: 512x512x4 minecraft:textures/atlas/banner_patterns.png-atlas
+[17:48:50] [Render thread/INFO] (Minecraft) Created: 512x512x4 minecraft:textures/atlas/shield_patterns.png-atlas
+[17:48:50] [Render thread/INFO] (Minecraft) Created: 1024x1024x4 minecraft:textures/atlas/armor_trims.png-atlas
+[17:48:50] [Render thread/INFO] (Minecraft) Created: 256x256x4 minecraft:textures/atlas/chest.png-atlas
+[17:48:50] [Render thread/INFO] (Minecraft) Created: 128x64x4 minecraft:textures/atlas/decorated_pot.png-atlas
+[17:48:50] [Render thread/INFO] (Minecraft) Created: 512x256x4 minecraft:textures/atlas/beds.png-atlas
+[17:48:50] [Render thread/INFO] (Minecraft) Created: 512x256x4 minecraft:textures/atlas/shulker_boxes.png-atlas
+[17:48:50] [Render thread/WARN] (Minecraft) Shader rendertype_entity_translucent_emissive could not find sampler named Sampler2 in the specified shader program.
+[17:48:50] [Render thread/INFO] (Minecraft) Created: 256x256x0 minecraft:textures/atlas/particles.png-atlas
+[17:48:50] [Render thread/INFO] (Minecraft) Created: 256x256x0 minecraft:textures/atlas/paintings.png-atlas
+[17:48:50] [Render thread/INFO] (Minecraft) Created: 128x128x0 minecraft:textures/atlas/mob_effects.png-atlas
+[17:48:54] [Render thread/INFO] (Minecraft) Loaded 8 recipes
+[17:48:54] [Render thread/INFO] (Minecraft) Loaded 1271 advancements
+[17:48:55] [Render thread/INFO] (BiomeModificationImpl) Applied 0 biome modifications to 0 of 64 new biomes in 884.2 μs
+[17:48:55] [Server thread/INFO] (Minecraft) Starting integrated minecraft server version 1.20.1
+[17:48:55] [Server thread/INFO] (Minecraft) Generating keypair
+[17:48:55] [Server thread/INFO] (Minecraft) Preparing start region for dimension minecraft:overworld
+[17:48:57] [Render thread/INFO] (Minecraft) Preparing spawn area: 0%
+[17:48:57] [Render thread/INFO] (Minecraft) Preparing spawn area: 0%
+[17:48:57] [Render thread/INFO] (Minecraft) Preparing spawn area: 0%
+[17:48:57] [Render thread/INFO] (Minecraft) Preparing spawn area: 0%
+[17:48:57] [Render thread/INFO] (Minecraft) Time elapsed: 1786 ms
+[17:48:57] [Server thread/INFO] (Minecraft) Changing view distance to 32, from 10
+[17:48:57] [Server thread/INFO] (Minecraft) Changing simulation distance to 12, from 0
+[17:48:58] [Server thread/INFO] (Minecraft) Player681[local:E:d13c44b8] logged in with entity id 226 at (166.99415344178252, 71.15814676123665, 174.4837078283333)
+[17:48:58] [Server thread/INFO] (Minecraft) Player681 joined the game
+[17:48:58] [Render thread/ERROR] (Minecraft) Error executing task on Client
+java.lang.NullPointerException: null key in entry: null=me.illia.trollmod.recipe.TeapotRecipe@6e338096
+	at com.google.common.collect.CollectPreconditions.checkEntryNotNull(CollectPreconditions.java:31) ~[guava-31.1-jre.jar:?]
+	at com.google.common.collect.ImmutableMapEntry.<init>(ImmutableMapEntry.java:54) ~[guava-31.1-jre.jar:?]
+	at com.google.common.collect.ImmutableMap.entryOf(ImmutableMap.java:339) ~[guava-31.1-jre.jar:?]
+	at com.google.common.collect.ImmutableMap$Builder.put(ImmutableMap.java:449) ~[guava-31.1-jre.jar:?]
+	at net.minecraft.recipe.RecipeManager.method_20704(RecipeManager.java:263) ~[minecraft-merged-e572a196b7-1.20.1-net.fabricmc.yarn.1_20_1.1.20.1+build.10-v2.jar:?]
+	at java.util.ArrayList.forEach(ArrayList.java:1604) ~[?:?]
+	at net.minecraft.recipe.RecipeManager.setRecipes(RecipeManager.java:259) ~[minecraft-merged-e572a196b7-1.20.1-net.fabricmc.yarn.1_20_1.1.20.1+build.10-v2.jar:?]
+	at net.minecraft.client.network.ClientPlayNetworkHandler.onSynchronizeRecipes(ClientPlayNetworkHandler.java:1451) ~[minecraft-merged-e572a196b7-1.20.1-net.fabricmc.yarn.1_20_1.1.20.1+build.10-v2.jar:?]
+	at net.minecraft.network.packet.s2c.play.SynchronizeRecipesS2CPacket.apply(SynchronizeRecipesS2CPacket.java:31) ~[minecraft-merged-e572a196b7-1.20.1-net.fabricmc.yarn.1_20_1.1.20.1+build.10-v2.jar:?]
+	at net.minecraft.network.packet.s2c.play.SynchronizeRecipesS2CPacket.apply(SynchronizeRecipesS2CPacket.java) ~[minecraft-merged-e572a196b7-1.20.1-net.fabricmc.yarn.1_20_1.1.20.1+build.10-v2.jar:?]
+	at net.minecraft.network.NetworkThreadUtils.method_11072(NetworkThreadUtils.java:22) ~[minecraft-merged-e572a196b7-1.20.1-net.fabricmc.yarn.1_20_1.1.20.1+build.10-v2.jar:?]
+	at net.minecraft.util.thread.ThreadExecutor.executeTask(ThreadExecutor.java:138) ~[minecraft-merged-e572a196b7-1.20.1-net.fabricmc.yarn.1_20_1.1.20.1+build.10-v2.jar:?]
+	at net.minecraft.util.thread.ReentrantThreadExecutor.executeTask(ReentrantThreadExecutor.java:24) ~[minecraft-merged-e572a196b7-1.20.1-net.fabricmc.yarn.1_20_1.1.20.1+build.10-v2.jar:?]
+	at net.minecraft.util.thread.ThreadExecutor.runTask(ThreadExecutor.java:112) ~[minecraft-merged-e572a196b7-1.20.1-net.fabricmc.yarn.1_20_1.1.20.1+build.10-v2.jar:?]
+	at net.minecraft.util.thread.ThreadExecutor.runTasks(ThreadExecutor.java:101) ~[minecraft-merged-e572a196b7-1.20.1-net.fabricmc.yarn.1_20_1.1.20.1+build.10-v2.jar:?]
+	at net.minecraft.client.MinecraftClient.render(MinecraftClient.java:1172) ~[minecraft-merged-e572a196b7-1.20.1-net.fabricmc.yarn.1_20_1.1.20.1+build.10-v2.jar:?]
+	at net.minecraft.client.MinecraftClient.run(MinecraftClient.java:799) ~[minecraft-merged-e572a196b7-1.20.1-net.fabricmc.yarn.1_20_1.1.20.1+build.10-v2.jar:?]
+	at net.minecraft.client.main.Main.main(Main.java:223) ~[minecraft-merged-e572a196b7-1.20.1-net.fabricmc.yarn.1_20_1.1.20.1+build.10-v2.jar:?]
+	at net.fabricmc.loader.impl.game.minecraft.MinecraftGameProvider.launch(MinecraftGameProvider.java:506) ~[fabric-loader-0.17.2.jar:?]
+	at net.fabricmc.loader.impl.launch.knot.Knot.launch(Knot.java:72) ~[fabric-loader-0.17.2.jar:?]
+	at net.fabricmc.loader.impl.launch.knot.KnotClient.main(KnotClient.java:23) ~[fabric-loader-0.17.2.jar:?]
+	at net.fabricmc.devlaunchinjector.Main.main(Main.java:86) ~[dev-launch-injector-0.2.1+build.8.jar:?]
+[17:48:58] [Render thread/INFO] (Minecraft) Loaded 16 advancements
+[17:49:10] [Server thread/INFO] (Minecraft) [Player681: Gave 1 [Water Bucket] to Player681]
+[17:49:10] [Render thread/INFO] (Minecraft) [System] [CHAT] Gave 1 [Water Bucket] to Player681
+[17:49:10] [Render thread/INFO] (Minecraft) Loaded 17 advancements
+[17:49:14] [Server thread/INFO] (Minecraft) Saving and pausing game...
+[17:49:14] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[New World]'/minecraft:overworld
+[17:49:14] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[New World]'/minecraft:the_end
+[17:49:14] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[New World]'/minecraft:the_nether
+[17:49:17] [Server thread/INFO] (Minecraft) Saving and pausing game...
+[17:49:17] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[New World]'/minecraft:overworld
+[17:49:17] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[New World]'/minecraft:the_end
+[17:49:17] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[New World]'/minecraft:the_nether
+[17:49:17] [Server thread/INFO] (Minecraft) Player681 lost connection: Disconnected
+[17:49:17] [Server thread/INFO] (Minecraft) Player681 left the game
+[17:49:17] [Server thread/INFO] (Minecraft) Stopping singleplayer server as player logged out
+[17:49:17] [Server thread/INFO] (Minecraft) Stopping server
+[17:49:17] [Server thread/INFO] (Minecraft) Saving players
+[17:49:17] [Server thread/INFO] (Minecraft) Saving worlds
+[17:49:17] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[New World]'/minecraft:overworld
+[17:49:18] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[New World]'/minecraft:the_end
+[17:49:18] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[New World]'/minecraft:the_nether
+[17:49:18] [Server thread/INFO] (Minecraft) ThreadedAnvilChunkStorage (New World (6)): All chunks are saved
+[17:49:18] [Server thread/INFO] (Minecraft) ThreadedAnvilChunkStorage (DIM1): All chunks are saved
+[17:49:18] [Server thread/INFO] (Minecraft) ThreadedAnvilChunkStorage (DIM-1): All chunks are saved
+[17:49:18] [Server thread/INFO] (Minecraft) ThreadedAnvilChunkStorage: All dimensions are saved
+[17:49:21] [Render thread/INFO] (Minecraft) Stopping!

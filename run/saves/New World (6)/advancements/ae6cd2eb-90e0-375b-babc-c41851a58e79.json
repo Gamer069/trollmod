@@ -47,13 +47,6 @@
     },
     "done": true
   },
-  "minecraft:adventure/adventuring_time": {
-    "criteria": {
-      "minecraft:forest": "2025-08-28 10:02:55 +0300",
-      "minecraft:ocean": "2025-08-28 10:02:48 +0300"
-    },
-    "done": false
-  },
   "minecraft:recipes/transportation/bamboo_raft": {
     "criteria": {
       "in_water": "2025-08-28 10:02:47 +0300"
@@ -111,6 +104,20 @@
   "minecraft:recipes/redstone/piston": {
     "criteria": {
       "has_redstone": "2025-08-28 10:02:47 +0300"
+    },
+    "done": true
+  },
+  "minecraft:adventure/adventuring_time": {
+    "criteria": {
+      "minecraft:stony_shore": "2025-08-28 12:38:50 +0300",
+      "minecraft:forest": "2025-08-28 10:02:55 +0300",
+      "minecraft:ocean": "2025-08-28 10:02:48 +0300"
+    },
+    "done": false
+  },
+  "minecraft:recipes/food/cake": {
+    "criteria": {
+      "has_egg": "2025-08-28 12:38:49 +0300"
     },
     "done": true
   },
