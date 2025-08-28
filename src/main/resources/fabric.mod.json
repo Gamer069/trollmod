@@ -1,0 +1,31 @@
+{
+    "schemaVersion": 1,
+    "id": "trollmod",
+    "version": "${version}",
+    "name": "trollmod",
+    "description": "",
+    "authors": [],
+    "contact": {},
+    "license": "unlicense",
+    "icon": "assets/trollmod/icon.png",
+    "environment": "*",
+    "entrypoints": {
+        "fabric-datagen": [
+            "me.illia.trollmod.client.TrollmodDataGenerator"
+        ],
+        "client": [
+            "me.illia.trollmod.client.TrollmodClient"
+        ],
+        "main": [
+            "me.illia.trollmod.Trollmod"
+        ]
+    },
+    "mixins": [
+        "trollmod.mixins.json"
+    ],
+    "depends": {
+        "fabricloader": ">=${loader_version}",
+        "fabric": "*",
+        "minecraft": "${minecraft_version}"
+    }
+}
