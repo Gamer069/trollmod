@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cross",
+  "textures": {
+    "cross": "trollmod:block/purpleheart_sapling"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "block.trollmod.purpleheart_leaves": "Purpleheart Leaves",
+  "block.trollmod.purpleheart_log": "Purpleheart Log",
+  "block.trollmod.purpleheart_planks": "Purpleheart Planks",
+  "block.trollmod.purpleheart_sapling": "Purpleheart Sapling",
+  "block.trollmod.purpleheart_wood": "Purpleheart Wood",
+  "block.trollmod.stripped_purpleheart_log": "Stripped Purpleheart Log",
+  "block.trollmod.stripped_purpleheart_wood": "Stripped Purpleheart Wood",
+  "category.trollmod.trollmod": "trollmod",
+  "death.attack.boomerang": "%1$s was obliterated by a boomerang",
+  "entity.trollmod.hot_air_balloon": "Hot Air Balloon",
+  "item.trollmod.boomerang": "Boomerang",
+  "item.trollmod.hot_air_balloon": "Hot Air Balloon",
+  "item.trollmod.wooden_teapot": "Wooden Teapot",
+  "itemGroup.trollmod.blocks": "%1$s blocks",
+  "itemGroup.trollmod.items": "%1$s items",
+  "key.trollmod.catch": "Catch Boomerang",
+  "key.trollmod.phase": "Phase",
+  "msg.trollmod.locked": "Perspective is locked!",
+  "screen.trollmod.teapot": "Teapot"
+}

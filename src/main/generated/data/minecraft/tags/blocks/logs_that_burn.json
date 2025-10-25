@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "trollmod:purpleheart_log",
+    "trollmod:stripped_purpleheart_log",
+    "trollmod:purpleheart_wood",
+    "trollmod:stripped_purpleheart_wood",
+    "trollmod:purpleheart_planks"
+  ]
+}

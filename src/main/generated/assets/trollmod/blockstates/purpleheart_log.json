@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "axis=x": {
+      "model": "trollmod:block/purpleheart_log_horizontal",
+      "x": 90,
+      "y": 90
+    },
+    "axis=y": {
+      "model": "trollmod:block/purpleheart_log"
+    },
+    "axis=z": {
+      "model": "trollmod:block/purpleheart_log_horizontal",
+      "x": 90
+    }
+  }
+}

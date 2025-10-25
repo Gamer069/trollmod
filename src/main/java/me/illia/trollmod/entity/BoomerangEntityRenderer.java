@@ -1,6 +1,7 @@
 package me.illia.trollmod.entity;
 
 import me.illia.trollmod.Trollmod;
+import me.illia.trollmod.Util;
 import me.illia.trollmod.client.TrollmodClient;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.RenderLayer;
@@ -39,6 +40,6 @@ public class BoomerangEntityRenderer extends EntityRenderer<BoomerangEntity> {
 
 	@Override
 	public Identifier getTexture(BoomerangEntity entity) {
-		return Identifier.of(Trollmod.MODID, "textures/entity/boomerang.png");
+		return Util.id("textures/entity/boomerang.png");
 	}
 }

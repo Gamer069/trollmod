@@ -20,10 +20,12 @@ import net.minecraft.world.World;
 public class TeapotRecipe implements Recipe<SimpleInventory> {
 	private final ItemStack output;
 	private final Ingredient input;
+	private final Identifier id;
 
-	public TeapotRecipe(Ingredient recipeItems, ItemStack output) {
+	public TeapotRecipe(Identifier id, Ingredient recipeItems, ItemStack output) {
 		this.input = recipeItems;
 		this.output = output;
+		this.id = id;
 	}
 
 	@Override
@@ -60,7 +62,7 @@ public class TeapotRecipe implements Recipe<SimpleInventory> {
 
 	@Override
 	public Identifier getId() {
-		return null;
+		return id;
 	}
 
 	@Override
@@ -98,7 +100,7 @@ public class TeapotRecipe implements Recipe<SimpleInventory> {
 			ItemStack outputItemStack = outputItem.getDefaultStack();
 			outputItemStack.setCount(teapotRecipeJSONFormat.outputAmount);
 
-			return new TeapotRecipe(Ingredient.fromJson(teapotRecipeJSONFormat.input), outputItemStack);
+			return new TeapotRecipe(id, Ingredient.fromJson(teapotRecipeJSONFormat.input), outputItemStack);
 		}
 
 		@Override
@@ -106,7 +108,7 @@ public class TeapotRecipe implements Recipe<SimpleInventory> {
 			Ingredient input = Ingredient.fromPacket(buf);
 			ItemStack output = buf.readItemStack();
 
-			return new TeapotRecipe(input, output);
+			return new TeapotRecipe(id, input, output);
 		}
 
 		@Override

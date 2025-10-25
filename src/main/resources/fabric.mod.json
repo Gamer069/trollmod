@@ -4,20 +4,23 @@
     "version": "${version}",
     "name": "trollmod",
     "description": "",
-    "authors": [],
+    "authors": [ "Illia Zhdanov" ],
     "contact": {},
     "license": "unlicense",
     "icon": "assets/trollmod/icon.png",
     "environment": "*",
     "entrypoints": {
         "fabric-datagen": [
-            "me.illia.trollmod.client.TrollmodDataGenerator"
+            "me.illia.trollmod.datagen.TrollmodDataGenerator"
         ],
         "client": [
             "me.illia.trollmod.client.TrollmodClient"
         ],
         "main": [
             "me.illia.trollmod.Trollmod"
+        ],
+        "cardinal-components-entity": [
+            "me.illia.trollmod.component.ModComponents"
         ]
     },
     "mixins": [
@@ -25,7 +28,14 @@
     ],
     "depends": {
         "fabricloader": ">=${loader_version}",
+        "fabric-key-binding-api-v1": "*",
         "fabric": "*",
         "minecraft": "${minecraft_version}"
+    },
+    "custom": {
+        "cardinal-components": [
+            "trollmod:catch",
+            "trollmod:phasing"
+        ]
     }
 }

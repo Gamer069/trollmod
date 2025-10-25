@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/leaves",
+  "textures": {
+    "all": "trollmod:block/purpleheart_leaves"
+  }
+}

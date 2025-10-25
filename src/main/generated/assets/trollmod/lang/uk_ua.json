@@ -1,0 +1,21 @@
+{
+  "block.trollmod.purpleheart_leaves": "Амарантнове листя",
+  "block.trollmod.purpleheart_log": "Амарантнова колода",
+  "block.trollmod.purpleheart_planks": "Амарантнові дошки",
+  "block.trollmod.purpleheart_sapling": "Паросток амаранта",
+  "block.trollmod.purpleheart_wood": "Амарантнова деревина",
+  "block.trollmod.stripped_purpleheart_log": "Обтесана амарантнова колода",
+  "block.trollmod.stripped_purpleheart_wood": "Обтесана амарантнова деревина",
+  "category.trollmod.trollmod": "trollmod",
+  "death.attack.boomerang": "%1$s був знищений бумерангом",
+  "entity.trollmod.hot_air_balloon": "Повітряна куля",
+  "item.trollmod.boomerang": "Бумеранг",
+  "item.trollmod.hot_air_balloon": "Повітряна куля",
+  "item.trollmod.wooden_teapot": "Дерев'яний чайник",
+  "itemGroup.trollmod.blocks": "%1$s блоки",
+  "itemGroup.trollmod.items": "%1$s предмети",
+  "key.trollmod.catch": "Спіймати бумеранг",
+  "key.trollmod.phase": "Фазувати",
+  "msg.trollmod.locked": "Перспектива заблокована!",
+  "screen.trollmod.teapot": "Чайник"
+}

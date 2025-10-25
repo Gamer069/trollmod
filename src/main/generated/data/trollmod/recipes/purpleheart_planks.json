@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "trollmod:purpleheart_log"
+    }
+  ],
+  "result": {
+    "count": 4,
+    "item": "trollmod:purpleheart_planks"
+  }
+}

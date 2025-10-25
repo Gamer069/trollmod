@@ -1,0 +1,8 @@
+// 1.20.1	2025-10-25T10:19:40.949264418	trollmod/Block Loot Tables
+a5b8e79ccd9d1b2fe22443bd94d074a3912ca69f data/trollmod/loot_tables/blocks/purpleheart_planks.json
+86bb6fc30891d925d962ef5133790ff859241d99 data/trollmod/loot_tables/blocks/purpleheart_log.json
+0a45c2b429837ebfa829adf301dc0dc1680f331c data/trollmod/loot_tables/blocks/stripped_purpleheart_wood.json
+6eb8b40791ea3145463de7ac957fc1f9e13b4cc3 data/trollmod/loot_tables/blocks/stripped_purpleheart_log.json
+6bee37fd3726db22233a15e0ad12606c62590105 data/trollmod/loot_tables/blocks/purpleheart_leaves.json
+51ae2dd0293a5b51510e599370b73fab19cc732b data/trollmod/loot_tables/blocks/purpleheart_sapling.json
+e3e95a54663afffa70c3937492f7df540b0d5097 data/trollmod/loot_tables/blocks/purpleheart_wood.json

@@ -1,11 +1,18 @@
 package me.illia.trollmod.screen;
 
+import me.illia.trollmod.Trollmod;
+import me.illia.trollmod.networking.ModNetworking;
 import me.illia.trollmod.recipe.TeapotRecipe;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.Inventories;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeMatcher;
 import net.minecraft.recipe.book.RecipeBookCategory;
@@ -15,15 +22,82 @@ import net.minecraft.world.World;
 
 public class TeapotScreenHandler extends AbstractRecipeScreenHandler<Inventory> {
 	public PlayerInventory playerInv;
-	public Inventory inv;
+	public SimpleInventory inv;
 	public World world;
+	public boolean updating;
+
+	private void updateResult() {
+		if (updating || world == null) return;
+		updating = true;
+
+		ItemStack input = inv.getStack(0);
+		if (input.isEmpty()) {
+			if (!inv.getStack(1).isEmpty()) {
+				inv.setStack(1, ItemStack.EMPTY);
+			}
+			updating = false;
+			return;
+		}
+
+		world.getRecipeManager().getFirstMatch(TeapotRecipe.Type.INSTANCE, inv, world)
+			.ifPresentOrElse(recipe -> {
+				ItemStack result = recipe.craft(inv, world.getRegistryManager());
+				ItemStack current = inv.getStack(1);
+				if (!ItemStack.areEqual(current, result)) {
+					inv.setStack(1, result.copy());
+				}
+			}, () -> {
+				if (!inv.getStack(1).isEmpty()) {
+					inv.setStack(1, ItemStack.EMPTY);
+				}
+			});
+
+		updating = false;
+	}
+
+	@Override
+	public void onClosed(PlayerEntity player) {
+		super.onClosed(player);
+
+		for (int i = 0; i < this.inv.size(); i++) {
+			ItemStack stack = this.inv.getStack(i);
+			if (!stack.isEmpty()) {
+				if (player.getInventory().getEmptySlot() == -1)
+					player.dropItem(stack, false);
+				else player.giveItemStack(stack);
+
+				this.inv.setStack(i, ItemStack.EMPTY);
+			}
+		}
+	}
 
 	public TeapotScreenHandler(int syncId, PlayerInventory playerInv) {
 		super(ModScreenHandlers.TEAPOT_SCREEN_HANDLER, syncId);
+
 		this.playerInv = playerInv;
 		this.world = playerInv.player.getWorld();
 
-		this.inv = new SimpleInventory(2);
+		this.inv = new SimpleInventory(2) {
+			@Override
+			public void markDirty() {
+				super.markDirty();
+				if (world.isClient) {
+					PacketByteBuf buf = PacketByteBufs.create();
+					buf.writeByte(syncId);
+					buf.writeNbt(Inventories.writeNbt(new NbtCompound(), this.stacks));
+					buf.writeInt(this.size());
+					ClientPlayNetworking.send(ModNetworking.TEAPOT_SYNC, buf);
+
+					Trollmod.LOGGER.info("Client: " + inv.toString());
+				} else {
+					Trollmod.LOGGER.info("Server: " + inv.toString());
+				}
+				if (!updating)
+					updateResult();
+			}
+		};
+
+		Trollmod.LOGGER.info(inv.toString());
 
 		this.addSlot(new Slot(inv, 0, 44, 35));
 		this.addSlot(new TeapotOutputSlot(inv, 1, 116, 35));
@@ -44,52 +118,28 @@ public class TeapotScreenHandler extends AbstractRecipeScreenHandler<Inventory> 
 	}
 
 	@Override
-	public ItemStack quickMove(PlayerEntity player, int slot) {
-		ItemStack itemStack = ItemStack.EMPTY;
-		Slot slot2 = this.slots.get(slot);
-		if (slot2 != null && slot2.hasStack()) {
-			ItemStack itemStack2 = slot2.getStack();
-			itemStack = itemStack2.copy();
-			if (slot == 2) {
-				if (!this.insertItem(itemStack2, 3, 39, true)) {
-					return ItemStack.EMPTY;
-				}
+	public ItemStack quickMove(PlayerEntity player, int slotI) {
+		ItemStack stack = ItemStack.EMPTY;
+		Slot slot = this.slots.get(slotI);
 
-				slot2.onQuickTransfer(itemStack2, itemStack);
-			} else if (slot != 1 && slot != 0) {
-				if (this.isBoilable(itemStack2)) {
-					if (!this.insertItem(itemStack2, 0, 1, false)) {
-						return ItemStack.EMPTY;
-					}
-				} else if (slot >= 2 && slot < 30) {
-					if (!this.insertItem(itemStack2, 30, 39, false)) {
-						return ItemStack.EMPTY;
-					}
-				} else if (slot >= 30 && slot < 39 && !this.insertItem(itemStack2, 3, 30, false)) {
+		if (slot != null && slot.hasStack()) {
+			ItemStack orig = slot.getStack();
+			stack = orig.copy();
+			if (slotI < this.inv.size()) {
+				if (!this.insertItem(orig, this.inv.size(), this.slots.size(), true)) {
 					return ItemStack.EMPTY;
 				}
-			} else if (!this.insertItem(itemStack2, 3, 39, false)) {
+			} else if (!this.insertItem(orig, 0, this.inv.size(), false)) {
 				return ItemStack.EMPTY;
 			}
 
-			if (itemStack2.isEmpty()) {
-				slot2.setStack(ItemStack.EMPTY);
+			if (orig.isEmpty()) {
+				slot.setStack(ItemStack.EMPTY);
 			} else {
-				slot2.markDirty();
+				slot.markDirty();
 			}
-
-			if (itemStack2.getCount() == itemStack.getCount()) {
-				return ItemStack.EMPTY;
-			}
-
-			slot2.onTakeItem(player, itemStack2);
 		}
-
-		return itemStack;
-	}
-
-	public boolean isBoilable(ItemStack stack) {
-		return this.world.getRecipeManager().getFirstMatch(TeapotRecipe.Type.INSTANCE, new SimpleInventory(stack), this.world).isPresent();
+		return stack;
 	}
 
 	@Override

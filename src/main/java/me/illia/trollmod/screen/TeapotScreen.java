@@ -1,6 +1,7 @@
 package me.illia.trollmod.screen;
 
 import me.illia.trollmod.Trollmod;
+import me.illia.trollmod.Util;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.render.RenderLayer;
@@ -10,7 +11,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 public class TeapotScreen extends HandledScreen<TeapotScreenHandler> {
-	public static final Identifier TEXTURE = Identifier.of(Trollmod.MODID, "textures/gui/teapot.png");
+	public static final Identifier TEXTURE = Util.id("textures/gui/teapot.png");
 
 	public TeapotScreen(TeapotScreenHandler handler, PlayerInventory inventory, Text title) {
 		super(handler, inventory, title);

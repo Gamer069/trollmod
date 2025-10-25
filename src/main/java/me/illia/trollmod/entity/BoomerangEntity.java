@@ -2,15 +2,9 @@ package me.illia.trollmod.entity;
 
 import me.illia.trollmod.damage.ModDamageTypes;
 import me.illia.trollmod.item.ModItems;
-import me.illia.trollmod.Trollmod;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientChunkEvents;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientEntityEvents;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.networking.v1.ClientLoginConnectionEvents;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.damage.DamageSources;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.entity.projectile.ProjectileUtil;
@@ -25,7 +19,6 @@ import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldEvents;
 
 public class BoomerangEntity extends ProjectileEntity {
 	public boolean bounced = false;
@@ -64,12 +57,8 @@ public class BoomerangEntity extends ProjectileEntity {
 		}
 
 		if (getWorld().isClient) {
-			Trollmod.LOGGER.info("Tick " + this.age + ": Pos=(" +
-				String.format("%.3f,%.3f,%.3f", this.getX(), this.getY(), this.getZ()) +
-				") Vel=(" +
-				String.format("%.3f,%.3f,%.3f", this.getVelocity().x, this.getVelocity().y, this.getVelocity().z) + ")");
 			getWorld().addParticle(
-				ParticleTypes.END_ROD,
+				ParticleTypes.CLOUD,
 				this.getX(),
 				this.getY(),
 				this.getZ(),
@@ -108,28 +97,34 @@ public class BoomerangEntity extends ProjectileEntity {
 		}
 	}
 
+	public void give(PlayerEntity player, boolean disableIfDamage) {
+		ItemStack boomerang = ModItems.BOOMERANG.getDefaultStack();
+
+		if (player instanceof ServerPlayerEntity serverPlayerEntity) {
+			if (damage + 1 < boomerang.getMaxDamage()) {
+				boomerang.damage(1 + damage, getWorld().getRandom(), serverPlayerEntity);
+
+				if (player.getInventory().getEmptySlot() != -1) {
+					player.getInventory().setStack(player.getInventory().getEmptySlot(), boomerang);
+
+					this.discard();
+				}
+			} else if (!disableIfDamage) {
+				this.discard();
+			}
+		}
+	}
+
 	@Override
 	public void onPlayerCollision(PlayerEntity player) {
 		if (getOwner() != null && !player.getUuidAsString().equals(getOwner().getUuidAsString())) {
 			this.discard();
-			player.damage(ModDamageTypes.of(player.getWorld(), ModDamageTypes.BOOMERANG_DAMAGE_TYPE), 5);
+			player.damage(ModDamageTypes.of(player.getWorld(), ModDamageTypes.BOOMERANG_DAMAGE_TYPE_KEY), 5);
 
 			setVelocity(getVelocity().multiply(-0.85));
 			bounced = true;
 		} else if (bounced) {
-			ItemStack boomerang = ModItems.BOOMERANG.getDefaultStack();
-
-			if (player instanceof ServerPlayerEntity serverPlayerEntity) {
-				if (damage + 1 < boomerang.getMaxDamage()) {
-					boomerang.damage(1 + damage, getWorld().getRandom(), serverPlayerEntity);
-
-					if (player.getInventory().getEmptySlot() != -1) {
-						player.getInventory().setStack(player.getInventory().getEmptySlot(), boomerang);
-
-						this.discard();
-					}
-				}
-			}
+			give(player, true);
 		}
 	}
 
@@ -141,7 +136,7 @@ public class BoomerangEntity extends ProjectileEntity {
 			return;
 		}
 
-		entity.damage(ModDamageTypes.of(entity.getWorld(), ModDamageTypes.BOOMERANG_DAMAGE_TYPE), 5);
+		entity.damage(ModDamageTypes.of(entity.getWorld(), ModDamageTypes.BOOMERANG_DAMAGE_TYPE_KEY), 5);
 		setVelocity(getVelocity().multiply(-0.85));
 		bounced = true;
 		super.onEntityHit(entityHitResult);

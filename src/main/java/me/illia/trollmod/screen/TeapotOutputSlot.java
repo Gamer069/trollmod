@@ -1,8 +1,12 @@
 package me.illia.trollmod.screen;
 
+import me.illia.trollmod.recipe.TeapotRecipe;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
+import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.slot.Slot;
+import net.minecraft.world.World;
 
 public class TeapotOutputSlot extends Slot {
 	public TeapotOutputSlot(Inventory inventory, int index, int x, int y) {
@@ -12,17 +16,5 @@ public class TeapotOutputSlot extends Slot {
 	@Override
 	public boolean canInsert(ItemStack stack) {
 		return false;
-	}
-
-	@Override
-	public ItemStack takeStack(int amount) {
-		if (this.hasStack()) {
-			ItemStack stack = getStack();
-			stack.setCount(stack.getCount() + Math.min(amount, this.getStack().getCount()));
-
-			this.setStack(stack);
-		}
-
-		return super.takeStack(amount);
 	}
 }

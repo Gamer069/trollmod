@@ -4,8 +4,15 @@
     "package": "me.illia.trollmod.mixin",
     "compatibilityLevel": "JAVA_17",
     "mixins": [
+        "GameOptionsMixin",
+        "JumpingAccessor",
+        "PhaseMixin",
+        "PhaseMixin$PlayerEntityPhaseMixin",
+        "PhaseMixin$ServerPlayerEntityPhaseMixin"
     ],
     "client": [
+        "InGameHudMixin",
+        "RawInputMixin"
     ],
     "injectors": {
         "defaultRequire": 1
