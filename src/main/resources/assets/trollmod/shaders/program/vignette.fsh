@@ -1,21 +1,16 @@
 #version 330
 
-uniform sampler2D DiffuseSampler;   // main framebuffer
-uniform sampler2D VignetteTexture;  // your PNG vignette texture
-uniform vec2 InSize;                // framebuffer size
+uniform sampler2D DiffuseSampler;
+uniform sampler2D VignetteTexture;
 
+in vec2 texCoord;
 out vec4 fragColor;
 
 void main() {
-    // convert fragment coordinate to normalized UV
-    vec2 uv = gl_FragCoord.xy / InSize;
+    vec4 sceneColor = texture(DiffuseSampler, texCoord);
+    vec4 vignetteMask = texture(VignetteTexture, texCoord);
 
-    // sample the scene and vignette textures
-    vec4 sceneColor = texture(DiffuseSampler, uv);
-    vec4 vignetteMask = texture(VignetteTexture, uv);
-
-    // assume vignette texture is black where dark, white where visible
-    // multiply RGB by vignette's brightness
+    // Multiply scene RGB by vignette brightness
     sceneColor.rgb *= vignetteMask.rgb;
 
     fragColor = sceneColor;

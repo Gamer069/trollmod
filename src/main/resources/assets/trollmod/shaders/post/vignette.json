@@ -1,12 +1,12 @@
 {
     "targets": [
-        "minecraft:main"
+        "swap"
     ],
     "passes": [
         {
             "name": "trollmod:vignette",
             "intarget": "minecraft:main",
-            "outtarget": "minecraft:main",
+            "outtarget": "swap",
             "auxtargets": [
                 {
                     "name": "VignetteTexture",
@@ -16,6 +16,11 @@
                     "bilinear": true
                 }
             ]
+        },
+        {
+            "name": "blit",
+            "intarget": "swap",
+            "outtarget": "minecraft:main"
         }
     ]
 }

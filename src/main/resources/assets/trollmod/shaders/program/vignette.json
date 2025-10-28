@@ -1,9 +1,4 @@
 {
-    "blend": {
-        "func": "add",
-        "srcrgb": "one",
-        "dstrgb": "zero"
-    },
     "vertex": "trollmod:vignette",
     "fragment": "trollmod:vignette",
     "attributes": ["Position"],
