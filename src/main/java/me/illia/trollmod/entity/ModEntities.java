@@ -28,7 +28,7 @@ public class ModEntities {
 	);
 
 	public static void init() {
-		FabricDefaultAttributeRegistry.register(HOT_AIR_BALLOON, HotAirBalloonEntity.createLivingAttributes().add(EntityAttributes.GENERIC_MAX_HEALTH, 8));
+		FabricDefaultAttributeRegistry.register(HOT_AIR_BALLOON, HotAirBalloonEntity.createMobAttributes().add(EntityAttributes.GENERIC_MAX_HEALTH, 8));
 		Trollmod.LOGGER.info("Initting entities");
 	}
 }

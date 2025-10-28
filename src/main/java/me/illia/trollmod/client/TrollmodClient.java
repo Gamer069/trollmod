@@ -8,6 +8,7 @@ import me.illia.trollmod.entity.*;
 import me.illia.trollmod.networking.ModNetworking;
 import me.illia.trollmod.screen.ModScreenHandlers;
 import me.illia.trollmod.screen.TeapotScreen;
+import me.illia.trollmod.shader.ModShaders;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -15,6 +16,7 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.color.item.ItemColorProvider;
@@ -58,8 +60,9 @@ public class TrollmodClient implements ClientModInitializer {
 		EntityModelLayerRegistry.registerModelLayer(HOT_AIR_BALLOON_LAYER, HotAirBalloonEntityModel::getTexturedModelData);
 		HandledScreens.register(ModScreenHandlers.TEAPOT_SCREEN_HANDLER, TeapotScreen::new);
 		ModKeybinds.init();
+		ModShaders.init();
+
 		ClientTickEvents.END_CLIENT_TICK.register(client -> {
-			handleHotAirBalloonRotation(client);
 			handleBoomerangCatch(client);
 			handlePhase(client);
 		});
@@ -131,15 +134,6 @@ public class TrollmodClient implements ClientModInitializer {
 			ClientPlayNetworking.send(ModNetworking.CATCH_BOOMERANG, buf);
 		} else if (!currentlyPressed) {
 			wasCatchPressedLastTick = false;
-		}
-	}
-
-	private void handleHotAirBalloonRotation(MinecraftClient client) {
-		if (client.player == null) return;
-
-		if (client.player.getVehicle() instanceof HotAirBalloonEntity entity) {
-			entity.setYaw(client.player.getYaw());
-			entity.setPitch(client.player.getPitch());
 		}
 	}
 }

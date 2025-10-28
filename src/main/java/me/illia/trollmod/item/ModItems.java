@@ -46,7 +46,7 @@ public class ModItems {
 	}
 
 	public static void init() {
-		Trollmod.LOGGER.info("Initting items...");
+		Trollmod.LOGGER.info("Initializing items for " + Trollmod.MODID);
 
 		Registry.register(Registries.ITEM_GROUP, ITEMS_GROUP_KEY, ITEMS_GROUP);
 

@@ -3,6 +3,7 @@ package me.illia.trollmod;
 import me.illia.trollmod.block.ModBlocks;
 import me.illia.trollmod.damage.ModDamageTypes;
 import me.illia.trollmod.dispenser.ModDispenserBehaviors;
+import me.illia.trollmod.effect.ModEffects;
 import me.illia.trollmod.entity.ModEntities;
 import me.illia.trollmod.item.ModItems;
 import me.illia.trollmod.networking.ModNetworking;
@@ -28,6 +29,7 @@ public class Trollmod implements ModInitializer {
 		ModScreenHandlers.init();
 		ModDispenserBehaviors.init();
 		ModWorldGeneration.init();
-		ModRecipes.register();
+		ModRecipes.init();
+		ModEffects.init();
 	}
 }

@@ -3,7 +3,6 @@ package me.illia.trollmod.entity;
 import com.google.common.collect.Maps;
 import me.illia.trollmod.Trollmod;
 import me.illia.trollmod.item.ModItems;
-import me.illia.trollmod.mixin.GameOptionsMixin;
 import me.illia.trollmod.mixin.JumpingAccessor;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.Perspective;
@@ -12,6 +11,7 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
+import net.minecraft.entity.mob.FlyingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.DyeItem;
 import net.minecraft.item.ItemStack;
@@ -27,12 +27,14 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class HotAirBalloonEntity extends LivingEntity {
+public class HotAirBalloonEntity extends FlyingEntity implements GravityChangingEntity {
 	private static final TrackedData<String> OWNER_UUID = DataTracker.registerData(HotAirBalloonEntity.class, TrackedDataHandlerRegistry.STRING);
 	private static final TrackedData<Byte> COLOR = DataTracker.registerData(HotAirBalloonEntity.class, TrackedDataHandlerRegistry.BYTE);
 	public static final Map<DyeColor, float[]> COLORS = Maps.newEnumMap(
 		(Map)Arrays.stream(DyeColor.values()).collect(Collectors.toMap(color -> color, DyeColor::getColorComponents))
 	);
+
+	public LivingEntity controllingPassenger = null;
 
 	@Override
 	public boolean shouldRenderName() {
@@ -74,27 +76,30 @@ public class HotAirBalloonEntity extends LivingEntity {
 	}
 
 	@Override
-	public void tick() {
-		super.tick();
+	protected void tickControlled(PlayerEntity player, Vec3d movementInput) {
+		Vec3d forwardDir = player.getRotationVector().normalize();
+		double speed = 0.1;
 
-		if (this.hasPassengers() && this.getFirstPassenger() instanceof PlayerEntity player) {
-			Vec3d forwardDir = player.getRotationVector().normalize();
-			double speed = 0.1;
+		// only forward/backwards
+		double dx = forwardDir.x * player.forwardSpeed * speed;
+		double dz = forwardDir.z * player.forwardSpeed * speed;
 
-			// only forward/backwards
-			double dx = forwardDir.x * player.forwardSpeed * speed;
-			double dz = forwardDir.z * player.forwardSpeed * speed;
+		// vertical
+		double dy = ((JumpingAccessor) player).trollmod$isJumping() ? 0.15 : -0.05;
 
-			// vertical
-			double dy = ((JumpingAccessor) player).trollmod$isJumping() ? 0.15 : -0.05;
+		this.setVelocity(dx, dy, dz);
+		this.move(MovementType.SELF, this.getVelocity());
 
-			this.setVelocity(dx, dy, dz);
-			this.move(MovementType.SELF, this.getVelocity());
+		setYaw(player.getHeadYaw());
+		prevYaw = player.prevHeadYaw;
+		headYaw = player.headYaw;
 
-			setYaw(player.getHeadYaw());
-			prevYaw = player.prevHeadYaw;
-			headYaw = player.headYaw;
-		}
+		super.tickControlled(player, movementInput);
+	}
+
+	@Override
+	public LivingEntity getControllingPassenger() {
+		return controllingPassenger;
 	}
 
 	@Override
@@ -120,6 +125,8 @@ public class HotAirBalloonEntity extends LivingEntity {
 			MinecraftClient client = MinecraftClient.getInstance();
 			client.options.setPerspective(Perspective.THIRD_PERSON_BACK);
 			Trollmod.LOCK = true;
+
+			controllingPassenger = (LivingEntity)entity;
 		}
 	}
 
@@ -129,6 +136,8 @@ public class HotAirBalloonEntity extends LivingEntity {
 			MinecraftClient client = MinecraftClient.getInstance();
 			client.options.setPerspective(Perspective.FIRST_PERSON);
 			Trollmod.LOCK = false;
+
+			controllingPassenger = null;
 		}
 		super.removePassenger(entity);
 	}
@@ -138,7 +147,7 @@ public class HotAirBalloonEntity extends LivingEntity {
 	}
 
 	@Override
-	public ActionResult interact(PlayerEntity player, Hand hand) {
+	public ActionResult interactMob(PlayerEntity player, Hand hand) {
 		ItemStack stack = player.getStackInHand(hand);
 		if (stack.getItem() instanceof DyeItem item) {
 			DyeColor color = item.getColor();
@@ -181,5 +190,10 @@ public class HotAirBalloonEntity extends LivingEntity {
 	@Override
 	public Arm getMainArm() {
 		return Arm.RIGHT;
+	}
+
+	@Override
+	public double gravity() {
+		return 0.05;
 	}
 }

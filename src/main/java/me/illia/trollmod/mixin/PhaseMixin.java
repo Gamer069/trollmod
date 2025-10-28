@@ -80,10 +80,10 @@ public abstract class PhaseMixin implements ComponentProvider {
 		protected void move(MovementType movementType, Vec3d movement, Operation<Void> orig) {
 			PhasingComponent phase = getComponent(ModComponents.PHASING_COMPONENT_KEY);
 			PlayerEntity inst = (PlayerEntity)(Object)this;
+
 			if (phase.isPhasing() && !inst.isCreative()) {
 				inst.setPosition(inst.getX() + movement.x, inst.getY(), inst.getZ() + movement.z);
 				return;
-//				orig.call(movementType, movement);
 			}
 			super.move(movementType, movement, orig);
 		}

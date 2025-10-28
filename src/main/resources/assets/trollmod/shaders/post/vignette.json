@@ -1,0 +1,21 @@
+{
+    "targets": [
+        "minecraft:main"
+    ],
+    "passes": [
+        {
+            "name": "trollmod:vignette",
+            "intarget": "minecraft:main",
+            "outtarget": "minecraft:main",
+            "auxtargets": [
+                {
+                    "name": "VignetteTexture",
+                    "id": "trollmod:vignette",
+                    "width": 5600,
+                    "height": 3000,
+                    "bilinear": true
+                }
+            ]
+        }
+    ]
+}
