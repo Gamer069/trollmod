@@ -15,7 +15,7 @@ public class ModDamageTypes {
 	public static final DamageType BOOMERANG_DAMAGE_TYPE = new DamageType("boomerang", DamageScaling.WHEN_CAUSED_BY_LIVING_NON_PLAYER, 0.1f);
 
 	public static void init() {
-		Trollmod.LOGGER.info("Registering damage types for " + Trollmod.MODID + "...");
+		Trollmod.LOGGER.info("Initializing damage types for mod " + Trollmod.MODID);
 	}
 
 	public static DamageSource of(World world, RegistryKey<DamageType> key) {

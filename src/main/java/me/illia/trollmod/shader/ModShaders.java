@@ -1,6 +1,7 @@
 package me.illia.trollmod.shader;
 
 import me.illia.trollmod.Util;
+import me.illia.trollmod.effect.ModEffects;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
@@ -28,7 +29,7 @@ public class ModShaders {
 				}
 			}
 
-			if (VIGNETTE_EFFECT != null) {
+			if (VIGNETTE_EFFECT != null && client.player.hasStatusEffect(ModEffects.INVERT_CONTROLS.value())) {
 				VIGNETTE_EFFECT.setupDimensions(client.getWindow().getFramebufferWidth(), client.getWindow().getFramebufferHeight());
 
 				VIGNETTE_EFFECT.render(ctx.tickDelta());

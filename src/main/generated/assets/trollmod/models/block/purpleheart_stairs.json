@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/stairs",
+  "textures": {
+    "bottom": "trollmod:block/purpleheart_planks",
+    "side": "trollmod:block/purpleheart_planks",
+    "top": "trollmod:block/purpleheart_planks"
+  }
+}

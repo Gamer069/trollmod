@@ -1,7 +1,10 @@
 package me.illia.trollmod.client;
 
 import me.illia.trollmod.Util;
+import me.illia.trollmod.block.GhostBlockEntityRenderer;
+import me.illia.trollmod.block.ModBlockEntities;
 import me.illia.trollmod.block.ModBlocks;
+import me.illia.trollmod.block.SpikyBlockEntityRenderer;
 import me.illia.trollmod.component.BoomerangCatchComponent;
 import me.illia.trollmod.component.ModComponents;
 import me.illia.trollmod.entity.*;
@@ -24,6 +27,7 @@ import net.minecraft.client.color.world.BiomeColors;
 import net.minecraft.client.color.world.FoliageColors;
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
 import net.minecraft.client.render.entity.model.EntityModelLayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
@@ -51,6 +55,8 @@ public class TrollmodClient implements ClientModInitializer {
 	public void onInitializeClient() {
 		BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.PURPLEHEART_SAPLING, RenderLayer.getCutout());
 		BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.PURPLEHEART_LEAVES, RenderLayer.getCutoutMipped());
+		BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.PURPLEHEART_TRAPDOOR, RenderLayer.getCutoutMipped());
+		BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.PURPLEHEART_DOOR, RenderLayer.getCutoutMipped());
 		ColorProviderRegistry.BLOCK.register((state, view, pos, tintIndex) -> view != null && pos != null ? BiomeColors.getFoliageColor(view, pos) : FoliageColors.getDefaultColor(), ModBlocks.PURPLEHEART_LEAVES);
 		ColorProviderRegistry.ITEM.register((stack, tintIndex) -> FoliageColors.getDefaultColor(), ModBlocks.PURPLEHEART_LEAVES.asItem());
 
@@ -58,6 +64,9 @@ public class TrollmodClient implements ClientModInitializer {
 		EntityRendererRegistry.register(ModEntities.HOT_AIR_BALLOON, HotAirBalloonEntityRenderer::new);
 		EntityModelLayerRegistry.registerModelLayer(BOOMERANG_LAYER, BoomerangEntityModel::getTexturedModelData);
 		EntityModelLayerRegistry.registerModelLayer(HOT_AIR_BALLOON_LAYER, HotAirBalloonEntityModel::getTexturedModelData);
+		BlockEntityRendererFactories.register(ModBlockEntities.GHOST_BLOCK_ENTITY_TYPE, GhostBlockEntityRenderer::new);
+		BlockEntityRendererFactories.register(ModBlockEntities.SPIKY_BLOCK_ENTITY_TYPE, SpikyBlockEntityRenderer::new);
+
 		HandledScreens.register(ModScreenHandlers.TEAPOT_SCREEN_HANDLER, TeapotScreen::new);
 		ModKeybinds.init();
 		ModShaders.init();

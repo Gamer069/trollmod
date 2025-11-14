@@ -21,5 +21,8 @@ public class ModBlockTagProvider extends FabricTagProvider.BlockTagProvider {
 			.add(ModBlocks.PURPLEHEART_WOOD)
 			.add(ModBlocks.STRIPPED_PURPLEHEART_WOOD)
 			.add(ModBlocks.PURPLEHEART_PLANKS);
+
+		getOrCreateTagBuilder(BlockTags.SNOW_LAYER_CAN_SURVIVE_ON)
+			.add(ModBlocks.GHOST_BLOCK);
 	}
 }

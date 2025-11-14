@@ -7,8 +7,12 @@
         "minVersion": "0.5.0"
     },
     "mixins": [
+        "AbstractFireBlockMixin",
+        "BlockStateMixin",
+        "EntityMixin",
         "FlyingEntityMixin",
         "GameOptionsMixin",
+        "GravityTickEntitiesMixin",
         "JumpingAccessor",
         "LivingEntityMixin",
         "PhaseMixin",
@@ -16,6 +20,7 @@
         "PhaseMixin$ServerPlayerEntityPhaseMixin"
     ],
     "client": [
+        "BlockRenderManagerAccessor",
         "InGameHudMixin",
         "JsonEffectGlShaderMixin",
         "KeyboardInputMixin",

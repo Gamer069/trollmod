@@ -16,6 +16,7 @@
   "itemGroup.trollmod.items": "%1$s предмети",
   "key.trollmod.catch": "Спіймати бумеранг",
   "key.trollmod.phase": "Фазувати",
+  "message.trollmod.sound_set": "Звук %1$s поставлен",
   "msg.trollmod.locked": "Перспектива заблокована!",
   "screen.trollmod.teapot": "Чайник"
 }

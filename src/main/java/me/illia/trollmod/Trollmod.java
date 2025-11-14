@@ -1,11 +1,17 @@
 package me.illia.trollmod;
 
+import me.illia.trollmod.attachment.ModAttachmentTypes;
 import me.illia.trollmod.block.ModBlocks;
+import me.illia.trollmod.block.ModSetTypes;
+import me.illia.trollmod.block.ModSigns;
+import me.illia.trollmod.block.ModWoodTypes;
 import me.illia.trollmod.damage.ModDamageTypes;
 import me.illia.trollmod.dispenser.ModDispenserBehaviors;
 import me.illia.trollmod.effect.ModEffects;
 import me.illia.trollmod.entity.ModEntities;
+import me.illia.trollmod.event.ModEvents;
 import me.illia.trollmod.item.ModItems;
+import me.illia.trollmod.item.ModPotions;
 import me.illia.trollmod.networking.ModNetworking;
 import me.illia.trollmod.recipe.ModRecipes;
 import me.illia.trollmod.screen.ModScreenHandlers;
@@ -21,7 +27,12 @@ public class Trollmod implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
+		ModAttachmentTypes.init();
+		ModEvents.init();
 		ModItems.init();
+		ModSetTypes.init();
+		ModWoodTypes.init();
+		ModSigns.init();
 		ModBlocks.init();
 		ModEntities.init();
 		ModDamageTypes.init();
@@ -31,5 +42,6 @@ public class Trollmod implements ModInitializer {
 		ModWorldGeneration.init();
 		ModRecipes.init();
 		ModEffects.init();
+		ModPotions.init();
 	}
 }

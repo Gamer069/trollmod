@@ -35,6 +35,22 @@ public class ModItems {
 		new HotAirBalloonItem(new FabricItemSettings().maxCount(1)),
 		"hot_air_balloon"
 	);
+
+	public static final Item MOVING_WAND = register(
+		new MovingWandItem(new FabricItemSettings().maxCount(1)),
+		"moving_wand"
+	);
+
+	public static final Item TOTEM_OF_DYING = register(
+		new TotemOfDyingItem(new FabricItemSettings().maxCount(1)),
+		"totem_of_dying"
+	);
+
+	public static final Item SPIKY_ITEM = register(
+		new SpikyItem(new FabricItemSettings().maxCount(1)),
+		"spiky_item"
+	);
+
 	public static Item register(Item item, String id) {
 		Identifier itemID = Util.id(id);
 
@@ -46,7 +62,7 @@ public class ModItems {
 	}
 
 	public static void init() {
-		Trollmod.LOGGER.info("Initializing items for " + Trollmod.MODID);
+		Trollmod.LOGGER.info("Initializing items for mod " + Trollmod.MODID);
 
 		Registry.register(Registries.ITEM_GROUP, ITEMS_GROUP_KEY, ITEMS_GROUP);
 

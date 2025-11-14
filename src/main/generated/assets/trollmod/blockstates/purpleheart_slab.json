@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "trollmod:block/purpleheart_slab"
+    },
+    "type=double": {
+      "model": "trollmod:block/purpleheart_planks"
+    },
+    "type=top": {
+      "model": "trollmod:block/purpleheart_slab_top"
+    }
+  }
+}
