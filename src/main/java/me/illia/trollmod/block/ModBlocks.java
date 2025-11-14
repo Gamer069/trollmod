@@ -8,7 +8,6 @@ import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
 import net.fabricmc.fabric.api.registry.StrippableBlockRegistry;
-import net.minecraft.block.*;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
@@ -18,6 +17,19 @@ import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import net.minecraft.block.Block;
+import net.minecraft.block.LeavesBlock;
+import net.minecraft.block.PillarBlock;
+import net.minecraft.block.SaplingBlock;
+import net.minecraft.block.SlabBlock;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.StairsBlock;
+import net.minecraft.block.ButtonBlock;
+import net.minecraft.block.FenceBlock;
+import net.minecraft.block.FenceGateBlock;
+import net.minecraft.block.PressurePlateBlock;
+import net.minecraft.block.DoorBlock;
+import net.minecraft.block.TrapdoorBlock;
 
 import java.util.ArrayList;
 
