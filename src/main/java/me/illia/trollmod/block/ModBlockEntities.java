@@ -2,12 +2,12 @@ package me.illia.trollmod.block;
 
 import me.illia.trollmod.Util;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
-import net.minecraft.block.Block;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
-import net.minecraft.util.Identifier;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 
 public class ModBlockEntities {
 	public static final BlockEntityType<GhostBlockEntity> GHOST_BLOCK_ENTITY_TYPE = register("ghost_block", GhostBlockEntity::new, ModBlocks.GHOST_BLOCK);
@@ -19,7 +19,7 @@ public class ModBlockEntities {
 		FabricBlockEntityTypeBuilder.Factory<? extends T> entityFactory,
 		Block... blocks
 	) {
-		Identifier id = Util.id(name);
-		return Registry.register(Registries.BLOCK_ENTITY_TYPE, id, FabricBlockEntityTypeBuilder.<T>create(entityFactory, blocks).build());
+		ResourceLocation id = Util.id(name);
+		return Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, id, FabricBlockEntityTypeBuilder.<T>create(entityFactory, blocks).build());
 	}
 }

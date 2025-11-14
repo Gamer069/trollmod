@@ -3,8 +3,7 @@ package me.illia.trollmod.block;
 import me.illia.trollmod.Trollmod;
 import me.illia.trollmod.Util;
 import net.fabricmc.fabric.api.object.builder.v1.block.type.WoodTypeBuilder;
-import net.minecraft.block.WoodType;
-
+import net.minecraft.world.level.block.state.properties.WoodType;
 import java.util.Set;
 
 public class ModWoodTypes {

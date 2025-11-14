@@ -6,18 +6,18 @@ import me.illia.trollmod.networking.ModNetworking;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.BlockWithEntity;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.text.Text;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.client.Minecraft;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.BaseEntityBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
 import org.lwjgl.PointerBuffer;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.util.tinyfd.TinyFileDialogs;
@@ -26,18 +26,18 @@ import javax.sound.sampled.*;
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicReference;
 
-public class SoundBlock extends BlockWithEntity {
+public class SoundBlock extends BaseEntityBlock {
 	public SoundBlock(FabricBlockSettings fabricBlockSettings) {
 		super(fabricBlockSettings);
 	}
 
 	@Override
-	public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-		if (world.isClient && hand == Hand.MAIN_HAND) {
+	public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+		if (world.isClientSide && hand == InteractionHand.MAIN_HAND) {
 			AtomicReference<String> shared = new AtomicReference<>();
 
-			MinecraftClient client = MinecraftClient.getInstance();
-			client.openPauseMenu(false);
+			Minecraft client = Minecraft.getInstance();
+			client.pauseGame(false);
 
 			new Thread(() -> {
 				try (MemoryStack stack = MemoryStack.stackPush()) {
@@ -55,10 +55,10 @@ public class SoundBlock extends BlockWithEntity {
 
 					Trollmod.LOGGER.info("client-side data before main thread: " + data);
 
-					client.executeTask(() -> {
+					client.doRunTask(() -> {
 						Trollmod.LOGGER.info("client-side data: " + data);
 
-						PacketByteBuf buf = PacketByteBufs.create();
+						FriendlyByteBuf buf = PacketByteBufs.create();
 
 						buf.writeBlockPos(pos);
 
@@ -66,7 +66,7 @@ public class SoundBlock extends BlockWithEntity {
 
 						ClientPlayNetworking.send(ModNetworking.UPLOAD_SOUND, buf);
 
-						player.sendMessage(Text.translatable("message.trollmod.sound_set", fname), true);
+						player.displayClientMessage(Component.translatable("message.trollmod.sound_set", fname), true);
 					});
 				} catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
 					throw new RuntimeException(e);
@@ -74,11 +74,11 @@ public class SoundBlock extends BlockWithEntity {
 			}).start();
 		}
 
-		return super.onUse(state, world, pos, player, hand, hit);
+		return super.use(state, world, pos, player, hand, hit);
 	}
 
 	@Override
-	public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
 		return new SoundBlockEntity(pos, state);
 	}
 }

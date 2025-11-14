@@ -2,10 +2,9 @@ package me.illia.trollmod.item;
 
 import me.illia.trollmod.Util;
 import me.illia.trollmod.effect.ModEffects;
-import net.minecraft.item.Items;
-import net.minecraft.potion.Potion;
-import net.minecraft.potion.Potions;
-import net.minecraft.recipe.BrewingRecipeRegistry;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.alchemy.Potion;
+import net.minecraft.world.item.alchemy.Potions;
 
 public class ModPotions {
 	public static final Potion INVERT_CONTROLS = Util.pot(Util.id("invert_controls"), Util.desc(ModEffects.INVERT_CONTROLS, 1800, 0));

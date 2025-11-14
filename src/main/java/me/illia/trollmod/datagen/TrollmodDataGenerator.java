@@ -11,22 +11,21 @@ import me.illia.trollmod.world.ModPlacedFeatures;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
-import net.minecraft.data.DataOutput;
+import net.minecraft.core.RegistrySetBuilder;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataProvider;
-import net.minecraft.data.DataWriter;
-import net.minecraft.registry.RegistryBuilder;
-import net.minecraft.registry.RegistryKeys;
-
+import net.minecraft.data.PackOutput;
 import java.util.concurrent.CompletableFuture;
 
 public class TrollmodDataGenerator implements DataGeneratorEntrypoint {
 	@Override
-	public void buildRegistry(RegistryBuilder registryBuilder) {
-		registryBuilder.addRegistry(RegistryKeys.DAMAGE_TYPE, registerable -> {
+	public void buildRegistry(RegistrySetBuilder registryBuilder) {
+		registryBuilder.add(Registries.DAMAGE_TYPE, registerable -> {
 			registerable.register(ModDamageTypes.BOOMERANG_DAMAGE_TYPE_KEY, ModDamageTypes.BOOMERANG_DAMAGE_TYPE);
 		});
-		registryBuilder.addRegistry(RegistryKeys.CONFIGURED_FEATURE, ModConfiguredFeatures::bootstrap);
-		registryBuilder.addRegistry(RegistryKeys.PLACED_FEATURE, ModPlacedFeatures::bootstrap);
+		registryBuilder.add(Registries.CONFIGURED_FEATURE, ModConfiguredFeatures::bootstrap);
+		registryBuilder.add(Registries.PLACED_FEATURE, ModPlacedFeatures::bootstrap);
 	}
 
 	@Override
@@ -47,21 +46,21 @@ public class TrollmodDataGenerator implements DataGeneratorEntrypoint {
 	}
 
 	private static class BoomerangDamageTypeGenerator implements DataProvider {
-		private final DataOutput.PathResolver path;
+		private final PackOutput.PathProvider path;
 
 		public BoomerangDamageTypeGenerator(FabricDataOutput fabricDataOutput) {
-			path = fabricDataOutput.getResolver(DataOutput.OutputType.DATA_PACK, "damage_type/");
+			path = fabricDataOutput.createPathProvider(PackOutput.Target.DATA_PACK, "damage_type/");
 		}
 
 		@Override
-		public CompletableFuture<?> run(DataWriter writer) {
+		public CompletableFuture<?> run(CachedOutput writer) {
 			JsonObject damageTypeObject = new JsonObject();
 
 			damageTypeObject.addProperty("exhaustion", ModDamageTypes.BOOMERANG_DAMAGE_TYPE.exhaustion());
 			damageTypeObject.addProperty("message_id", ModDamageTypes.BOOMERANG_DAMAGE_TYPE.msgId());
-			damageTypeObject.addProperty("scaling", ModDamageTypes.BOOMERANG_DAMAGE_TYPE.scaling().asString());
+			damageTypeObject.addProperty("scaling", ModDamageTypes.BOOMERANG_DAMAGE_TYPE.scaling().getSerializedName());
 
-			return DataProvider.writeToPath(writer, damageTypeObject, path.resolveJson(Util.id("boomerang_damage_type")));
+			return DataProvider.saveStable(writer, damageTypeObject, path.json(Util.id("boomerang_damage_type")));
 		}
 
 		@Override

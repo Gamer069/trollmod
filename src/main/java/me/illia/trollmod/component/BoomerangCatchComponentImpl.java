@@ -2,19 +2,19 @@ package me.illia.trollmod.component;
 
 import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
 import me.illia.trollmod.entity.BoomerangEntity;
-import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.CompoundTag;
 
 public class BoomerangCatchComponentImpl implements BoomerangCatchComponent {
 	private int boomerang;
 	private boolean withinRadius = false;
 
 	@Override
-	public void readFromNbt(NbtCompound nbtCompound) {
+	public void readFromNbt(CompoundTag nbtCompound) {
 		withinRadius = nbtCompound.getBoolean("withinRadius");
 	}
 
 	@Override
-	public void writeToNbt(NbtCompound nbtCompound) {
+	public void writeToNbt(CompoundTag nbtCompound) {
 		nbtCompound.putBoolean("withinRadius", withinRadius);
 	}
 

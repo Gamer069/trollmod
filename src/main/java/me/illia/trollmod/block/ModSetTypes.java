@@ -4,11 +4,10 @@ import com.google.common.collect.Maps;
 import me.illia.trollmod.Trollmod;
 import me.illia.trollmod.Util;
 import net.fabricmc.fabric.api.object.builder.v1.block.type.BlockSetTypeBuilder;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockSetType;
-import net.minecraft.data.family.BlockFamily;
-import net.minecraft.registry.Registries;
-
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.data.BlockFamily;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.properties.BlockSetType;
 import java.util.Map;
 
 public class ModSetTypes {
@@ -25,15 +24,15 @@ public class ModSetTypes {
 		.stairs(ModBlocks.PURPLEHEART_STAIRS)
 		.door(ModBlocks.PURPLEHEART_DOOR)
 		.trapdoor(ModBlocks.PURPLEHEART_TRAPDOOR)
-		.group("wooden")
-		.unlockCriterionName("has_planks")
-		.build();
+		.recipeGroupPrefix("wooden")
+		.recipeUnlockedBy("has_planks")
+		.getFamily();
 
 	public static BlockFamily.Builder register(Block baseBlock) {
 		BlockFamily.Builder builder = new BlockFamily.Builder(baseBlock);
-		BlockFamily blockFamily = BASE_BLOCKS_TO_FAMILIES.put(baseBlock, builder.build());
+		BlockFamily blockFamily = BASE_BLOCKS_TO_FAMILIES.put(baseBlock, builder.getFamily());
 		if (blockFamily != null) {
-			throw new IllegalStateException("Duplicate family definition for " + Registries.BLOCK.getId(baseBlock));
+			throw new IllegalStateException("Duplicate family definition for " + BuiltInRegistries.BLOCK.getKey(baseBlock));
 		} else {
 			return builder;
 		}

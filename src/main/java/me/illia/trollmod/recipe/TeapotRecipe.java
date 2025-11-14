@@ -3,65 +3,65 @@ package me.illia.trollmod.recipe;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
-import net.minecraft.inventory.SimpleInventory;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.recipe.Ingredient;
-import net.minecraft.recipe.Recipe;
-import net.minecraft.recipe.RecipeSerializer;
-import net.minecraft.recipe.RecipeType;
-import net.minecraft.registry.DynamicRegistryManager;
-import net.minecraft.registry.Registries;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.collection.DefaultedList;
-import net.minecraft.world.World;
+import net.minecraft.core.NonNullList;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.level.Level;
 
-public class TeapotRecipe implements Recipe<SimpleInventory> {
+public class TeapotRecipe implements Recipe<SimpleContainer> {
 	private final ItemStack output;
 	private final Ingredient input;
-	private final Identifier id;
+	private final ResourceLocation id;
 
-	public TeapotRecipe(Identifier id, Ingredient recipeItems, ItemStack output) {
+	public TeapotRecipe(ResourceLocation id, Ingredient recipeItems, ItemStack output) {
 		this.input = recipeItems;
 		this.output = output;
 		this.id = id;
 	}
 
 	@Override
-	public boolean matches(SimpleInventory inventory, World world) {
-		if (!world.isClient()) {
+	public boolean matches(SimpleContainer inventory, Level world) {
+		if (!world.isClientSide()) {
 			return false;
 		}
 
-		return input.test(inventory.getStack(0));
+		return input.test(inventory.getItem(0));
 	}
 
 	@Override
-	public ItemStack craft(SimpleInventory inventory, DynamicRegistryManager registryManager) {
+	public ItemStack craft(SimpleContainer inventory, RegistryAccess registryManager) {
 		return output;
 	}
 
 	@Override
-	public boolean fits(int width, int height) {
+	public boolean canCraftInDimensions(int width, int height) {
 		return true;
 	}
 
 	@Override
-	public ItemStack getOutput(DynamicRegistryManager registryManager) {
+	public ItemStack getResultItem(RegistryAccess registryManager) {
 		return output;
 	}
 
 	@Override
-	public DefaultedList<Ingredient> getIngredients() {
-		DefaultedList<Ingredient> list = DefaultedList.ofSize(1);
+	public NonNullList<Ingredient> getIngredients() {
+		NonNullList<Ingredient> list = NonNullList.createWithCapacity(1);
 		list.add(input);
 
 		return list;
 	}
 
 	@Override
-	public Identifier getId() {
+	public ResourceLocation getId() {
 		return id;
 	}
 
@@ -85,7 +85,7 @@ public class TeapotRecipe implements Recipe<SimpleInventory> {
 		public static final String ID = "teapot";
 
 		@Override
-		public TeapotRecipe read(Identifier id, JsonObject json) {
+		public TeapotRecipe fromJson(ResourceLocation id, JsonObject json) {
 			TeapotRecipeJSONFormat teapotRecipeJSONFormat = new Gson().fromJson(json, TeapotRecipeJSONFormat.class);
 
 			if (teapotRecipeJSONFormat.input == null) {
@@ -94,27 +94,27 @@ public class TeapotRecipe implements Recipe<SimpleInventory> {
 				throw new JsonSyntaxException("outputItem is missing");
 			}
 
-			Item outputItem = Registries.ITEM.getOrEmpty(new Identifier(teapotRecipeJSONFormat.outputItem))
+			Item outputItem = BuiltInRegistries.ITEM.getOptional(new ResourceLocation(teapotRecipeJSONFormat.outputItem))
 				.orElseThrow(() -> new JsonSyntaxException("No such item: " + teapotRecipeJSONFormat.outputItem));
 
-			ItemStack outputItemStack = outputItem.getDefaultStack();
+			ItemStack outputItemStack = outputItem.getDefaultInstance();
 			outputItemStack.setCount(teapotRecipeJSONFormat.outputAmount);
 
 			return new TeapotRecipe(id, Ingredient.fromJson(teapotRecipeJSONFormat.input), outputItemStack);
 		}
 
 		@Override
-		public TeapotRecipe read(Identifier id, PacketByteBuf buf) {
-			Ingredient input = Ingredient.fromPacket(buf);
-			ItemStack output = buf.readItemStack();
+		public TeapotRecipe fromNetwork(ResourceLocation id, FriendlyByteBuf buf) {
+			Ingredient input = Ingredient.fromNetwork(buf);
+			ItemStack output = buf.readItem();
 
 			return new TeapotRecipe(id, input, output);
 		}
 
 		@Override
-		public void write(PacketByteBuf buf, TeapotRecipe recipe) {
-			recipe.input.write(buf);
-			buf.writeItemStack(recipe.output);
+		public void write(FriendlyByteBuf buf, TeapotRecipe recipe) {
+			recipe.input.toNetwork(buf);
+			buf.writeItem(recipe.output);
 		}
 	}
 }

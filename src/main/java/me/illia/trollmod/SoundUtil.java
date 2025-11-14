@@ -1,11 +1,11 @@
 package me.illia.trollmod;
 
-import net.minecraft.network.PacketByteBuf;
+import net.minecraft.CrashReport;
+import net.minecraft.ReportedException;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.WorldSavePath;
-import net.minecraft.util.crash.CrashException;
-import net.minecraft.util.crash.CrashReport;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.level.storage.LevelResource;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.openal.AL;
 import org.lwjgl.openal.AL10;
@@ -28,7 +28,7 @@ public class SoundUtil {
 		public int sampleRate;
 		public int bitsPerSample;
 
-		public void writeTo(PacketByteBuf buf) {
+		public void writeTo(FriendlyByteBuf buf) {
 			ByteBuffer src = data.duplicate();
 			src.rewind();
 
@@ -42,7 +42,7 @@ public class SoundUtil {
 		}
 
 		public static Path getPath(BlockPos pos, MinecraftServer server) {
-			Path savePath = server.getSavePath(WorldSavePath.ROOT).resolve(Trollmod.MODID + "/audio");
+			Path savePath = server.getWorldPath(LevelResource.ROOT).resolve(Trollmod.MODID + "/audio");
 			try {
 				Trollmod.LOGGER.info("savePath: " + savePath);
 				MessageDigest digest = MessageDigest.getInstance("SHA-256");
@@ -71,7 +71,7 @@ public class SoundUtil {
 
 				return savePath.resolve(hex + ".tad");
 			} catch (NoSuchAlgorithmException e) {
-				throw new CrashException(CrashReport.create(e, "Failed to write audio to file"));
+				throw new ReportedException(CrashReport.forThrowable(e, "Failed to write audio to file"));
 			}
 		}
 
@@ -101,7 +101,7 @@ public class SoundUtil {
 				for (byte dataByte : dataBytes)
 					dos.writeByte(dataByte);
 			} catch (Throwable e) {
-				throw new CrashException(CrashReport.create(e, "Failed to write audio data to file"));
+				throw new ReportedException(CrashReport.forThrowable(e, "Failed to write audio data to file"));
 			}
 		}
 
@@ -131,7 +131,7 @@ public class SoundUtil {
 
 				audioData.data = data;
 			} catch (Throwable e) {
-				CrashReport.create(e, "Failed to read audio data from file");
+				CrashReport.forThrowable(e, "Failed to read audio data from file");
 			}
 
 			return audioData;
@@ -145,7 +145,7 @@ public class SoundUtil {
 				", bitsPerSample=" + bitsPerSample;
 		}
 
-		public static AudioData readFrom(PacketByteBuf buf) {
+		public static AudioData readFrom(FriendlyByteBuf buf) {
 			int len = buf.readVarInt();
 
 			byte[] bytes = new byte[len];

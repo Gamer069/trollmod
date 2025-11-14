@@ -1,17 +1,15 @@
 package me.illia.trollmod.effect;
 
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.effect.StatusEffect;
-import net.minecraft.entity.effect.StatusEffectCategory;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectCategory;
 
-public class InvertControlsEffect extends StatusEffect {
+public class InvertControlsEffect extends MobEffect {
 	public InvertControlsEffect() {
-		super(StatusEffectCategory.HARMFUL, 0xC750D4);
+		super(MobEffectCategory.HARMFUL, 0xC750D4);
 	}
 
 	@Override
-	public boolean canApplyUpdateEffect(int duration, int amplifier) {
+	public boolean isDurationEffectTick(int duration, int amplifier) {
 		return true;
 	}
 }

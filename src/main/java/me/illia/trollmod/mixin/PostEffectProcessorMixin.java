@@ -3,22 +3,22 @@ package me.illia.trollmod.mixin;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import me.illia.trollmod.Trollmod;
-import net.minecraft.client.gl.PostEffectProcessor;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.renderer.PostChain;
+import net.minecraft.resources.ResourceLocation;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
-@Mixin(PostEffectProcessor.class)
+@Mixin(PostChain.class)
 public class PostEffectProcessorMixin {
 	@WrapOperation(
 		at = @At(
 			value = "NEW",
-			target = "(Ljava/lang/String;)Lnet/minecraft/util/Identifier;",
+			target = "(Ljava/lang/String;)Lnet/minecraft/resources/ResourceLocation;",
 			ordinal = 0
 		),
-		method = "parsePass"
+		method = "parsePassNode"
 	)
-	private Identifier initConstructTextureIdentifier(String id, Operation<Identifier> original) {
+	private ResourceLocation initConstructTextureIdentifier(String id, Operation<ResourceLocation> original) {
 		// id is textures/effect/trollmod:vignette.png
 		String fname = id.replaceFirst("^textures/effect/", "");
 
@@ -33,6 +33,6 @@ public class PostEffectProcessorMixin {
 			throw new RuntimeException();
 		}
 
-		return new Identifier(parts[0], "textures/effect/" + parts[1]);
+		return new ResourceLocation(parts[0], "textures/effect/" + parts[1]);
 	}
 }

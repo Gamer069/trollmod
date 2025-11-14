@@ -1,6 +1,6 @@
 package me.illia.trollmod.component;
 
-import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.CompoundTag;
 
 public class PhasingComponentImpl implements PhasingComponent {
 	public boolean phasing;
@@ -27,12 +27,12 @@ public class PhasingComponentImpl implements PhasingComponent {
 	}
 
 	@Override
-	public void readFromNbt(NbtCompound nbtCompound) {
+	public void readFromNbt(CompoundTag nbtCompound) {
 		this.phasing = nbtCompound.getBoolean("phasing");
 	}
 
 	@Override
-	public void writeToNbt(NbtCompound nbtCompound) {
+	public void writeToNbt(CompoundTag nbtCompound) {
 		nbtCompound.putBoolean("phasing", this.phasing);
 	}
 }

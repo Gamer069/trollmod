@@ -8,6 +8,10 @@ import me.illia.trollmod.item.ModItems;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricModelProvider;
 import net.minecraft.data.client.*;
+import net.minecraft.data.models.BlockModelGenerators;
+import net.minecraft.data.models.ItemModelGenerators;
+import net.minecraft.data.models.model.ModelTemplates;
+import net.minecraft.data.models.model.TexturedModel;
 
 public class ModModelProvider extends FabricModelProvider {
 	public ModModelProvider(FabricDataOutput output) {
@@ -15,25 +19,25 @@ public class ModModelProvider extends FabricModelProvider {
 	}
 
 	@Override
-	public void generateBlockStateModels(BlockStateModelGenerator b) {
-		b.registerLog(ModBlocks.PURPLEHEART_LOG).log(ModBlocks.PURPLEHEART_LOG).wood(ModBlocks.PURPLEHEART_WOOD);
-		b.registerLog(ModBlocks.STRIPPED_PURPLEHEART_LOG).log(ModBlocks.STRIPPED_PURPLEHEART_LOG).wood(ModBlocks.STRIPPED_PURPLEHEART_WOOD);
-		b.registerSingleton(ModBlocks.PURPLEHEART_LEAVES, TexturedModel.LEAVES);
-		b.registerTintableCross(ModBlocks.PURPLEHEART_SAPLING, BlockStateModelGenerator.TintType.NOT_TINTED);
+	public void generateBlockStateModels(BlockModelGenerators b) {
+		b.woodProvider(ModBlocks.PURPLEHEART_LOG).logWithHorizontal(ModBlocks.PURPLEHEART_LOG).wood(ModBlocks.PURPLEHEART_WOOD);
+		b.woodProvider(ModBlocks.STRIPPED_PURPLEHEART_LOG).logWithHorizontal(ModBlocks.STRIPPED_PURPLEHEART_LOG).wood(ModBlocks.STRIPPED_PURPLEHEART_WOOD);
+		b.createTrivialBlock(ModBlocks.PURPLEHEART_LEAVES, TexturedModel.LEAVES);
+		b.createCrossBlockWithDefaultItem(ModBlocks.PURPLEHEART_SAPLING, BlockModelGenerators.TintState.NOT_TINTED);
 
-		BlockStateModelGenerator.BlockTexturePool signTexturePool = b.registerCubeAllModelTexturePool(ModBlocks.PURPLEHEART_PLANKS);
+		BlockModelGenerators.BlockFamilyProvider signTexturePool = b.family(ModBlocks.PURPLEHEART_PLANKS);
 
-		signTexturePool.family(ModSetTypes.PURPLEHEART_FAMILY);
+		signTexturePool.generateFor(ModSetTypes.PURPLEHEART_FAMILY);
 
-		b.registerHangingSign(ModBlocks.STRIPPED_PURPLEHEART_LOG, ModSigns.PURPLEHEART_HANGING_SIGN, ModSigns.PURPLEHEART_WALL_HANGING_SIGN);
+		b.createHangingSign(ModBlocks.STRIPPED_PURPLEHEART_LOG, ModSigns.PURPLEHEART_HANGING_SIGN, ModSigns.PURPLEHEART_WALL_HANGING_SIGN);
 	}
 
 	@Override
-	public void generateItemModels(ItemModelGenerator itemModelGenerator) {
-		itemModelGenerator.register(ModItems.BOOMERANG, Models.GENERATED);
-		itemModelGenerator.register(ModItems.HOT_AIR_BALLOON, Models.GENERATED);
-		itemModelGenerator.register(ModItems.WOODEN_TEAPOT, Models.GENERATED);
-		itemModelGenerator.register(ModItems.MOVING_WAND, Models.GENERATED);
-		itemModelGenerator.register(ModItems.TOTEM_OF_DYING, Models.GENERATED);
+	public void generateItemModels(ItemModelGenerators itemModelGenerator) {
+		itemModelGenerator.generateFlatItem(ModItems.BOOMERANG, ModelTemplates.FLAT_ITEM);
+		itemModelGenerator.generateFlatItem(ModItems.HOT_AIR_BALLOON, ModelTemplates.FLAT_ITEM);
+		itemModelGenerator.generateFlatItem(ModItems.WOODEN_TEAPOT, ModelTemplates.FLAT_ITEM);
+		itemModelGenerator.generateFlatItem(ModItems.MOVING_WAND, ModelTemplates.FLAT_ITEM);
+		itemModelGenerator.generateFlatItem(ModItems.TOTEM_OF_DYING, ModelTemplates.FLAT_ITEM);
 	}
 }

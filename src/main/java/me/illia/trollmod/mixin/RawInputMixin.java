@@ -1,11 +1,11 @@
 package me.illia.trollmod.mixin;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.util.InputUtil;
 import org.spongepowered.asm.mixin.Mixin;
 
-@Mixin(InputUtil.class)
+@Mixin(InputConstants.class)
 @Environment(EnvType.CLIENT)
 public class RawInputMixin {
 }

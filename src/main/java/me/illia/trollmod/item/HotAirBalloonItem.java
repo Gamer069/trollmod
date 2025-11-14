@@ -2,12 +2,12 @@ package me.illia.trollmod.item;
 
 import me.illia.trollmod.entity.HotAirBalloonEntity;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Hand;
-import net.minecraft.util.TypedActionResult;
-import net.minecraft.world.World;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 
 public class HotAirBalloonItem extends Item {
 	public HotAirBalloonItem(FabricItemSettings settings) {
@@ -15,11 +15,11 @@ public class HotAirBalloonItem extends Item {
 	}
 
 	@Override
-	public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
+	public InteractionResultHolder<ItemStack> use(Level world, Player user, InteractionHand hand) {
 		HotAirBalloonEntity entity = new HotAirBalloonEntity(world, user);
-		entity.setPosition(user.getBlockPos().toCenterPos());
-		world.spawnEntity(entity);
-		user.getStackInHand(hand).decrement(1);
+		entity.setPos(user.blockPosition().getCenter());
+		world.addFreshEntity(entity);
+		user.getItemInHand(hand).shrink(1);
 		return super.use(world, user, hand);
 	}
 }

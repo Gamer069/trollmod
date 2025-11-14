@@ -11,13 +11,13 @@ public class ModBlockLootTableProvider extends FabricBlockLootTableProvider {
 
 	@Override
 	public void generate() {
-		addDrop(ModBlocks.PURPLEHEART_LOG);
-		addDrop(ModBlocks.PURPLEHEART_PLANKS);
-		addDrop(ModBlocks.PURPLEHEART_WOOD);
-		addDrop(ModBlocks.STRIPPED_PURPLEHEART_LOG);
-		addDrop(ModBlocks.STRIPPED_PURPLEHEART_WOOD);
-		addDrop(ModBlocks.PURPLEHEART_SAPLING);
+		dropSelf(ModBlocks.PURPLEHEART_LOG);
+		dropSelf(ModBlocks.PURPLEHEART_PLANKS);
+		dropSelf(ModBlocks.PURPLEHEART_WOOD);
+		dropSelf(ModBlocks.STRIPPED_PURPLEHEART_LOG);
+		dropSelf(ModBlocks.STRIPPED_PURPLEHEART_WOOD);
+		dropSelf(ModBlocks.PURPLEHEART_SAPLING);
 
-		addDrop(ModBlocks.PURPLEHEART_LEAVES, leavesDrops(ModBlocks.PURPLEHEART_LEAVES, ModBlocks.PURPLEHEART_SAPLING, 0.0025f));
+		add(ModBlocks.PURPLEHEART_LEAVES, createLeavesDrops(ModBlocks.PURPLEHEART_LEAVES, ModBlocks.PURPLEHEART_SAPLING, 0.0025f));
 	}
 }

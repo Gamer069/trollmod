@@ -3,22 +3,18 @@ package me.illia.trollmod.item;
 import me.illia.trollmod.Trollmod;
 import me.illia.trollmod.attachment.ModAttachmentTypes;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.ItemEntity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.ProjectileUtil;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.TypedActionResult;
-import net.minecraft.util.hit.EntityHitResult;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
-
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.ProjectileUtil;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.Vec3;
 import java.util.UUID;
 
 public class MovingWandItem extends Item {
@@ -30,15 +26,15 @@ public class MovingWandItem extends Item {
 
 	@SuppressWarnings("UnstableApiUsage")
 	@Override
-	public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
+	public InteractionResultHolder<ItemStack> use(Level world, Player user, InteractionHand hand) {
 		double reach = 3.0;
-		Vec3d eyePos = user.getCameraPosVec(1.0f);
-		Vec3d look = user.getRotationVec(1.0f);
-		Vec3d targetPos = eyePos.add(look.multiply(reach));
+		Vec3 eyePos = user.getEyePosition(1.0f);
+		Vec3 look = user.getViewVector(1.0f);
+		Vec3 targetPos = eyePos.add(look.scale(reach));
 
-		Box box = user.getBoundingBox().stretch(look.multiply(reach)).expand(1.0);
+		AABB box = user.getBoundingBox().expandTowards(look.scale(reach)).inflate(1.0);
 
-		EntityHitResult entityHit = ProjectileUtil.raycast(
+		EntityHitResult entityHit = ProjectileUtil.getEntityHitResult(
 			user,
 			eyePos,
 			targetPos,
@@ -52,17 +48,17 @@ public class MovingWandItem extends Item {
 
 			UUID controlledBy = entity.getAttachedOrElse(ModAttachmentTypes.IS_CONTROLLED, null);
 			controlledEntity = controlledBy == null ? entity : null;
-			entity.setGlowing(controlledBy == null);
+			entity.setGlowingTag(controlledBy == null);
 			entity.setNoGravity(controlledBy == null);
-			entity.setAttached(ModAttachmentTypes.IS_CONTROLLED, controlledBy == null ? user.getUuid() : null);
+			entity.setAttached(ModAttachmentTypes.IS_CONTROLLED, controlledBy == null ? user.getUUID() : null);
 
 			if (entity instanceof ItemEntity itemEntity && controlledBy != null) {
-				itemEntity.setToDefaultPickupDelay();
+				itemEntity.setDefaultPickUpDelay();
 			}
 
-			return TypedActionResult.success(user.getStackInHand(hand), true);
+			return InteractionResultHolder.sidedSuccess(user.getItemInHand(hand), true);
 		}
 
-		return TypedActionResult.pass(user.getStackInHand(hand));
+		return InteractionResultHolder.pass(user.getItemInHand(hand));
 	}
 }

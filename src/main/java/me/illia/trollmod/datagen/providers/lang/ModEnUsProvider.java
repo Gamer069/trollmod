@@ -55,8 +55,8 @@ public class ModEnUsProvider extends FabricLanguageProvider {
 
 		Util.t(t, ModEntities.HOT_AIR_BALLOON, "Hot Air Balloon");
 
-		Util.t(t, ModKeybinds.CATCH.getTranslationKey(), "Catch Boomerang");
-		Util.t(t, ModKeybinds.PHASE.getTranslationKey(), "Phase");
+		Util.t(t, ModKeybinds.CATCH.getName(), "Catch Boomerang");
+		Util.t(t, ModKeybinds.PHASE.getName(), "Phase");
 		Util.t(t, ModKeybinds.CATCH.getCategory(), "trollmod");
 
 		Util.t(t, ModItems.ITEMS_GROUP_KEY, "%1$s items");

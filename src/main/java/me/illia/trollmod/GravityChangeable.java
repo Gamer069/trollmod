@@ -2,12 +2,12 @@ package me.illia.trollmod;
 
 import me.illia.trollmod.attachment.ModAttachmentTypes;
 import me.illia.trollmod.effect.ModEffects;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.Level;
 
 public interface GravityChangeable {
-	default World trollmod$getWorld() {
+	default Level trollmod$getWorld() {
 		return null;
 	}
 
@@ -17,13 +17,13 @@ public interface GravityChangeable {
 
 	default float trollmod$getGravity() {
 		if (trollmod$getEntity() instanceof LivingEntity living) {
-			if (living.hasStatusEffect(ModEffects.HIGH_GRAVITY.value())) {
-				int amp = living.getStatusEffect(ModEffects.HIGH_GRAVITY.value()).getAmplifier() + 1;
+			if (living.hasEffect(ModEffects.HIGH_GRAVITY.value())) {
+				int amp = living.getEffect(ModEffects.HIGH_GRAVITY.value()).getAmplifier() + 1;
 				return trollmod$getNormalGravity() * (2f * amp);
 			}
 
-			if (living.hasStatusEffect(ModEffects.LOW_GARVITY.value())) {
-				int amp = living.getStatusEffect(ModEffects.LOW_GARVITY.value()).getAmplifier() + 1;
+			if (living.hasEffect(ModEffects.LOW_GARVITY.value())) {
+				int amp = living.getEffect(ModEffects.LOW_GARVITY.value()).getAmplifier() + 1;
 				return trollmod$getNormalGravity() * (0.5f / amp);
 			}
 

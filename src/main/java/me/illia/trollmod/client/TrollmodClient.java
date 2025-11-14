@@ -21,28 +21,24 @@ import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.color.item.ItemColorProvider;
-import net.minecraft.client.color.world.BiomeColors;
-import net.minecraft.client.color.world.FoliageColors;
-import net.minecraft.client.gui.screen.ingame.HandledScreens;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
-import net.minecraft.client.render.entity.model.EntityModelLayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.biome.Biome;
-
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.client.model.geom.ModelLayerLocation;
+import net.minecraft.client.renderer.BiomeColors;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.level.FoliageColor;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import java.util.Comparator;
 import java.util.List;
 
 public class TrollmodClient implements ClientModInitializer {
-	public static final EntityModelLayer BOOMERANG_LAYER = new EntityModelLayer(
+	public static final ModelLayerLocation BOOMERANG_LAYER = new ModelLayerLocation(
 		Util.id("boomerang"), "main"
 	);
-	public static final EntityModelLayer HOT_AIR_BALLOON_LAYER = new EntityModelLayer(
+	public static final ModelLayerLocation HOT_AIR_BALLOON_LAYER = new ModelLayerLocation(
 		Util.id("hot_air_balloon"), "main"
 	);
 	public boolean wasCatchPressedLastTick;
@@ -53,21 +49,21 @@ public class TrollmodClient implements ClientModInitializer {
 
 	@Override
 	public void onInitializeClient() {
-		BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.PURPLEHEART_SAPLING, RenderLayer.getCutout());
-		BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.PURPLEHEART_LEAVES, RenderLayer.getCutoutMipped());
-		BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.PURPLEHEART_TRAPDOOR, RenderLayer.getCutoutMipped());
-		BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.PURPLEHEART_DOOR, RenderLayer.getCutoutMipped());
-		ColorProviderRegistry.BLOCK.register((state, view, pos, tintIndex) -> view != null && pos != null ? BiomeColors.getFoliageColor(view, pos) : FoliageColors.getDefaultColor(), ModBlocks.PURPLEHEART_LEAVES);
-		ColorProviderRegistry.ITEM.register((stack, tintIndex) -> FoliageColors.getDefaultColor(), ModBlocks.PURPLEHEART_LEAVES.asItem());
+		BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.PURPLEHEART_SAPLING, RenderType.cutout());
+		BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.PURPLEHEART_LEAVES, RenderType.cutoutMipped());
+		BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.PURPLEHEART_TRAPDOOR, RenderType.cutoutMipped());
+		BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.PURPLEHEART_DOOR, RenderType.cutoutMipped());
+		ColorProviderRegistry.BLOCK.register((state, view, pos, tintIndex) -> view != null && pos != null ? BiomeColors.getAverageFoliageColor(view, pos) : FoliageColor.getDefaultColor(), ModBlocks.PURPLEHEART_LEAVES);
+		ColorProviderRegistry.ITEM.register((stack, tintIndex) -> FoliageColor.getDefaultColor(), ModBlocks.PURPLEHEART_LEAVES.asItem());
 
 		EntityRendererRegistry.register(ModEntities.BOOMERANG, BoomerangEntityRenderer::new);
 		EntityRendererRegistry.register(ModEntities.HOT_AIR_BALLOON, HotAirBalloonEntityRenderer::new);
 		EntityModelLayerRegistry.registerModelLayer(BOOMERANG_LAYER, BoomerangEntityModel::getTexturedModelData);
 		EntityModelLayerRegistry.registerModelLayer(HOT_AIR_BALLOON_LAYER, HotAirBalloonEntityModel::getTexturedModelData);
-		BlockEntityRendererFactories.register(ModBlockEntities.GHOST_BLOCK_ENTITY_TYPE, GhostBlockEntityRenderer::new);
-		BlockEntityRendererFactories.register(ModBlockEntities.SPIKY_BLOCK_ENTITY_TYPE, SpikyBlockEntityRenderer::new);
+		BlockEntityRenderers.register(ModBlockEntities.GHOST_BLOCK_ENTITY_TYPE, GhostBlockEntityRenderer::new);
+		BlockEntityRenderers.register(ModBlockEntities.SPIKY_BLOCK_ENTITY_TYPE, SpikyBlockEntityRenderer::new);
 
-		HandledScreens.register(ModScreenHandlers.TEAPOT_SCREEN_HANDLER, TeapotScreen::new);
+		MenuScreens.register(ModScreenHandlers.TEAPOT_SCREEN_HANDLER, TeapotScreen::new);
 		ModKeybinds.init();
 		ModShaders.init();
 
@@ -77,23 +73,23 @@ public class TrollmodClient implements ClientModInitializer {
 		});
 	}
 
-	private void handlePhase(MinecraftClient client) {
+	private void handlePhase(Minecraft client) {
 		if (client.player == null) return;
 
 		// Key pressed -> start phasing
-		if (ModKeybinds.PHASE.isPressed() && !wasPhasePressedLastTick) {
+		if (ModKeybinds.PHASE.isDown() && !wasPhasePressedLastTick) {
 			wasPhasePressedLastTick = true;
 
 			if (phaseTick == 0) {
 				phaseTick = PHASE_TIME; // set countdown to 40 ticks
 				client.player.getComponent(ModComponents.PHASING_COMPONENT_KEY).setPhasing(true);
 
-				PacketByteBuf buf = PacketByteBufs.create();
+				FriendlyByteBuf buf = PacketByteBufs.create();
 				buf.writeBoolean(true);
 				buf.writeInt(phaseTick);
 				ClientPlayNetworking.send(ModNetworking.PHASE, buf);
 			}
-		} else if (!ModKeybinds.PHASE.isPressed()) {
+		} else if (!ModKeybinds.PHASE.isDown()) {
 			wasPhasePressedLastTick = false;
 		}
 
@@ -106,7 +102,7 @@ public class TrollmodClient implements ClientModInitializer {
 			if (phaseTick == 0) {
 				client.player.getComponent(ModComponents.PHASING_COMPONENT_KEY).setPhasing(false);
 
-				PacketByteBuf buf = PacketByteBufs.create();
+				FriendlyByteBuf buf = PacketByteBufs.create();
 				buf.writeBoolean(false);
 				buf.writeInt(phaseTick);
 
@@ -115,30 +111,30 @@ public class TrollmodClient implements ClientModInitializer {
 		}
 	}
 
-	private void handleBoomerangCatch(MinecraftClient client) {
+	private void handleBoomerangCatch(Minecraft client) {
 		if (client.player == null) return;
 
-		Vec3d pos = client.player.getPos();
-		List<BoomerangEntity> boomerangs = client.player.getWorld().getEntitiesByClass(
+		Vec3 pos = client.player.position();
+		List<BoomerangEntity> boomerangs = client.player.level().getEntitiesOfClass(
 			BoomerangEntity.class,
-			new Box(pos.subtract(5, 5, 5), pos.add(5, 5, 5)),
-			e -> e.squaredDistanceTo(pos) < 25
+			new AABB(pos.subtract(5, 5, 5), pos.add(5, 5, 5)),
+			e -> e.distanceToSqr(pos) < 25
 		);
 
 		BoomerangEntity nearest = boomerangs.stream()
-			.min(Comparator.comparingDouble(e -> e.squaredDistanceTo(pos)))
+			.min(Comparator.comparingDouble(e -> e.distanceToSqr(pos)))
 			.orElse(null);
 
 		BoomerangCatchComponent comp = client.player.getComponent(ModComponents.BOOMERANG_CATCH_COMPONENT_KEY);
 		comp.set(nearest != null);
 		comp.setEntity(nearest == null ? 0 : nearest.getId());
 
-		boolean currentlyPressed = ModKeybinds.CATCH.isPressed();
+		boolean currentlyPressed = ModKeybinds.CATCH.isDown();
 
 		if (currentlyPressed && !wasCatchPressedLastTick && comp.isWithin()) {
 			wasCatchPressedLastTick = true;
 
-			PacketByteBuf buf = PacketByteBufs.create();
+			FriendlyByteBuf buf = PacketByteBufs.create();
 			buf.writeVarInt(nearest.getId());
 			ClientPlayNetworking.send(ModNetworking.CATCH_BOOMERANG, buf);
 		} else if (!currentlyPressed) {

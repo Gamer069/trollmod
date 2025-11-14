@@ -1,13 +1,12 @@
 package me.illia.trollmod.block;
 
 import me.illia.trollmod.SoundUtil;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.nbt.NbtCompound;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import java.nio.file.Files;
 
 public class SoundBlockEntity extends BlockEntity {
@@ -19,7 +18,7 @@ public class SoundBlockEntity extends BlockEntity {
 
 	public void setData(SoundUtil.AudioData data) {
 		this.data = data;
-		markDirty();
+		setChanged();
 	}
 
 	public SoundUtil.AudioData getData() {
@@ -27,21 +26,21 @@ public class SoundBlockEntity extends BlockEntity {
 	}
 
 	@Override
-	protected void writeNbt(NbtCompound nbt) {
+	protected void saveAdditional(CompoundTag nbt) {
 		if (data != null)
-			data.writeToFile(pos, world.getServer());
+			data.writeToFile(worldPosition, level.getServer());
 
-		super.writeNbt(nbt);
+		super.saveAdditional(nbt);
 	}
 
 	@Override
-	public void setWorld(World world) {
-		super.setWorld(world);
+	public void setLevel(Level world) {
+		super.setLevel(world);
 
-		if (!world.isClient) {
+		if (!world.isClientSide) {
 			MinecraftServer server = world.getServer();
-			if (Files.exists(SoundUtil.AudioData.getPath(pos, server))) {
-				data = SoundUtil.AudioData.readFromFile(pos, server);
+			if (Files.exists(SoundUtil.AudioData.getPath(worldPosition, server))) {
+				data = SoundUtil.AudioData.readFromFile(worldPosition, server);
 			}
 		}
 	}

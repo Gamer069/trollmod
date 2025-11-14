@@ -4,97 +4,101 @@ import com.google.common.collect.Maps;
 import me.illia.trollmod.Trollmod;
 import me.illia.trollmod.item.ModItems;
 import me.illia.trollmod.mixin.JumpingAccessor;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.option.Perspective;
+import net.minecraft.client.CameraType;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.*;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.entity.mob.FlyingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.DyeItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Arm;
-import net.minecraft.util.DyeColor;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
-
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.FlyingMob;
+import net.minecraft.world.entity.HumanoidArm;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.DyeItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class HotAirBalloonEntity extends FlyingEntity implements GravityChangingEntity {
-	private static final TrackedData<String> OWNER_UUID = DataTracker.registerData(HotAirBalloonEntity.class, TrackedDataHandlerRegistry.STRING);
-	private static final TrackedData<Byte> COLOR = DataTracker.registerData(HotAirBalloonEntity.class, TrackedDataHandlerRegistry.BYTE);
+public class HotAirBalloonEntity extends FlyingMob implements GravityChangingEntity {
+	private static final EntityDataAccessor<String> OWNER_UUID = SynchedEntityData.defineId(HotAirBalloonEntity.class, EntityDataSerializers.STRING);
+	private static final EntityDataAccessor<Byte> COLOR = SynchedEntityData.defineId(HotAirBalloonEntity.class, EntityDataSerializers.BYTE);
 	public static final Map<DyeColor, float[]> COLORS = Maps.newEnumMap(
-		(Map)Arrays.stream(DyeColor.values()).collect(Collectors.toMap(color -> color, DyeColor::getColorComponents))
+		(Map)Arrays.stream(DyeColor.values()).collect(Collectors.toMap(color -> color, DyeColor::getTextureDiffuseColors))
 	);
 
 	public LivingEntity controllingPassenger = null;
 
 	@Override
-	public boolean shouldRenderName() {
+	public boolean shouldShowName() {
 		return false;
 	}
 
 	@Override
-	public boolean isInvisibleTo(PlayerEntity player) {
-		if (player.getWorld().isClient && player.getUuidAsString().equals(getOwnerUuid())) {
-			MinecraftClient client = MinecraftClient.getInstance();
-			return client.options.getPerspective() == Perspective.FIRST_PERSON;
+	public boolean isInvisibleTo(Player player) {
+		if (player.level().isClientSide && player.getStringUUID().equals(getOwnerUuid())) {
+			Minecraft client = Minecraft.getInstance();
+			return client.options.getCameraType() == CameraType.FIRST_PERSON;
 		}
 		return super.isInvisibleTo(player);
 	}
 
 	private String getOwnerUuid() {
-		return this.dataTracker.get(OWNER_UUID);
+		return this.entityData.get(OWNER_UUID);
 	}
 
 	@Override
-	public boolean damage(DamageSource damageSource, float amount) {
-		if (damageSource.getAttacker() instanceof PlayerEntity player) {
-			if (player.getUuidAsString().equals(getOwnerUuid())) {
-				if (!player.getAbilities().creativeMode)
-					player.giveItemStack(ModItems.HOT_AIR_BALLOON.getDefaultStack());
+	public boolean hurt(DamageSource damageSource, float amount) {
+		if (damageSource.getEntity() instanceof Player player) {
+			if (player.getStringUUID().equals(getOwnerUuid())) {
+				if (!player.getAbilities().instabuild)
+					player.addItem(ModItems.HOT_AIR_BALLOON.getDefaultInstance());
 				discard();
 			}
 		}
-		return super.damage(damageSource, amount);
+		return super.hurt(damageSource, amount);
 	}
 
-	public HotAirBalloonEntity(World world, PlayerEntity owner) {
+	public HotAirBalloonEntity(Level world, Player owner) {
 		super(ModEntities.HOT_AIR_BALLOON, world);
-		this.dataTracker.set(OWNER_UUID, owner.getUuidAsString());
+		this.entityData.set(OWNER_UUID, owner.getStringUUID());
 	}
 
-	public HotAirBalloonEntity(EntityType<HotAirBalloonEntity> type, World world) {
+	public HotAirBalloonEntity(EntityType<HotAirBalloonEntity> type, Level world) {
 		super(type, world);
 	}
 
 	@Override
-	protected void tickControlled(PlayerEntity player, Vec3d movementInput) {
-		Vec3d forwardDir = player.getRotationVector().normalize();
+	protected void tickRidden(Player player, Vec3 movementInput) {
+		Vec3 forwardDir = player.getLookAngle().normalize();
 		double speed = 0.1;
 
 		// only forward/backwards
-		double dx = forwardDir.x * player.forwardSpeed * speed;
-		double dz = forwardDir.z * player.forwardSpeed * speed;
+		double dx = forwardDir.x * player.zza * speed;
+		double dz = forwardDir.z * player.zza * speed;
 
 		// vertical
 		double dy = ((JumpingAccessor) player).trollmod$isJumping() ? 0.15 : -0.05;
 
-		this.setVelocity(dx, dy, dz);
-		this.move(MovementType.SELF, this.getVelocity());
+		this.setDeltaMovement(dx, dy, dz);
+		this.move(MoverType.SELF, this.getDeltaMovement());
 
-		setYaw(player.getHeadYaw());
-		prevYaw = player.prevHeadYaw;
-		headYaw = player.headYaw;
+		setYRot(player.getYHeadRot());
+		yRotO = player.yHeadRotO;
+		yHeadRot = player.yHeadRot;
 
-		super.tickControlled(player, movementInput);
+		super.tickRidden(player, movementInput);
 	}
 
 	@Override
@@ -103,17 +107,17 @@ public class HotAirBalloonEntity extends FlyingEntity implements GravityChanging
 	}
 
 	@Override
-	public double getMountedHeightOffset() {
+	public double getPassengersRidingOffset() {
 		return 0;
 	}
 
 	@Override
-	public boolean canTarget(LivingEntity target) {
+	public boolean canAttack(LivingEntity target) {
 		return false;
 	}
 
 	@Override
-	public boolean handleFallDamage(float fallDistance, float damageMultiplier, DamageSource damageSource) {
+	public boolean causeFallDamage(float fallDistance, float damageMultiplier, DamageSource damageSource) {
 		return false;
 	}
 
@@ -121,9 +125,9 @@ public class HotAirBalloonEntity extends FlyingEntity implements GravityChanging
 	public void addPassenger(Entity entity) {
 		super.addPassenger(entity);
 
-		if (entity instanceof PlayerEntity) {
-			MinecraftClient client = MinecraftClient.getInstance();
-			client.options.setPerspective(Perspective.THIRD_PERSON_BACK);
+		if (entity instanceof Player) {
+			Minecraft client = Minecraft.getInstance();
+			client.options.setCameraType(CameraType.THIRD_PERSON_BACK);
 			Trollmod.LOCK = true;
 
 			controllingPassenger = (LivingEntity)entity;
@@ -132,9 +136,9 @@ public class HotAirBalloonEntity extends FlyingEntity implements GravityChanging
 
 	@Override
 	protected void removePassenger(Entity entity) {
-		if (entity instanceof PlayerEntity) {
-			MinecraftClient client = MinecraftClient.getInstance();
-			client.options.setPerspective(Perspective.FIRST_PERSON);
+		if (entity instanceof Player) {
+			Minecraft client = Minecraft.getInstance();
+			client.options.setCameraType(CameraType.FIRST_PERSON);
 			Trollmod.LOCK = false;
 
 			controllingPassenger = null;
@@ -143,53 +147,53 @@ public class HotAirBalloonEntity extends FlyingEntity implements GravityChanging
 	}
 
 	public byte getColor() {
-		return dataTracker.get(COLOR);
+		return entityData.get(COLOR);
 	}
 
 	@Override
-	public ActionResult interactMob(PlayerEntity player, Hand hand) {
-		ItemStack stack = player.getStackInHand(hand);
+	public InteractionResult mobInteract(Player player, InteractionHand hand) {
+		ItemStack stack = player.getItemInHand(hand);
 		if (stack.getItem() instanceof DyeItem item) {
-			DyeColor color = item.getColor();
-			if (color.getId() != dataTracker.get(COLOR)) {
-				stack.decrement(1);
+			DyeColor color = item.getDyeColor();
+			if (color.getId() != entityData.get(COLOR)) {
+				stack.shrink(1);
 			}
 
-			dataTracker.set(COLOR, (byte)color.getId());
-			return ActionResult.CONSUME;
+			entityData.set(COLOR, (byte)color.getId());
+			return InteractionResult.CONSUME;
 		} else {
-			if (!this.getWorld().isClient) {
+			if (!this.level().isClientSide) {
 				player.startRiding(this);
-				return ActionResult.SUCCESS;
+				return InteractionResult.SUCCESS;
 			}
 		}
-		return ActionResult.SUCCESS;
+		return InteractionResult.SUCCESS;
 	}
 
 	@Override
-	protected void initDataTracker() {
-		super.initDataTracker();
-		this.dataTracker.startTracking(OWNER_UUID, "");
-		this.dataTracker.startTracking(COLOR, (byte)0);
+	protected void defineSynchedData() {
+		super.defineSynchedData();
+		this.entityData.define(OWNER_UUID, "");
+		this.entityData.define(COLOR, (byte)0);
 	}
 
 	@Override
-	public Iterable<ItemStack> getArmorItems() {
+	public Iterable<ItemStack> getArmorSlots() {
 		return Collections.emptyList();
 	}
 
 	@Override
-	public ItemStack getEquippedStack(EquipmentSlot slot) {
+	public ItemStack getItemBySlot(EquipmentSlot slot) {
 		return ItemStack.EMPTY;
 	}
 
 	@Override
-	public void equipStack(EquipmentSlot slot, ItemStack stack) {
+	public void setItemSlot(EquipmentSlot slot, ItemStack stack) {
 	}
 
 	@Override
-	public Arm getMainArm() {
-		return Arm.RIGHT;
+	public HumanoidArm getMainArm() {
+		return HumanoidArm.RIGHT;
 	}
 
 	@Override

@@ -3,42 +3,40 @@ package me.illia.trollmod.item;
 import me.illia.trollmod.screen.ModScreenHandlers;
 import me.illia.trollmod.screen.TeapotScreenHandler;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ToolMaterial;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.screen.NamedScreenHandlerFactory;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.text.Text;
-import net.minecraft.util.Hand;
-import net.minecraft.util.TypedActionResult;
-import net.minecraft.world.World;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Tier;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
-public class TeapotItem extends Item implements NamedScreenHandlerFactory {
-	public ToolMaterial material;
+public class TeapotItem extends Item implements MenuProvider {
+	public Tier material;
 
-	public TeapotItem(ToolMaterial material, Settings settings) {
+	public TeapotItem(Tier material, Properties settings) {
 		super(settings);
 		this.material = material;
 	}
 
 	@Override
-	public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
-		user.openHandledScreen(this);
+	public InteractionResultHolder<ItemStack> use(Level world, Player user, InteractionHand hand) {
+		user.openMenu(this);
 		return super.use(world, user, hand);
 	}
 
 	@Override
-	public Text getDisplayName() {
-		return Text.translatable("screen.trollmod.teapot");
+	public Component getDisplayName() {
+		return Component.translatable("screen.trollmod.teapot");
 	}
 
 	@Override
-	public ScreenHandler createMenu(int syncId, PlayerInventory playerInventory, PlayerEntity player) {
+	public AbstractContainerMenu createMenu(int syncId, Inventory playerInventory, Player player) {
 		return new TeapotScreenHandler(syncId, playerInventory);
 	}
 }

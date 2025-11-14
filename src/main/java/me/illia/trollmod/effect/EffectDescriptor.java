@@ -1,6 +1,6 @@
 package me.illia.trollmod.effect;
 
-import net.minecraft.entity.effect.StatusEffect;
-import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.core.Holder;
+import net.minecraft.world.effect.MobEffect;
 
-public record EffectDescriptor(RegistryEntry<StatusEffect> entry, int duration, int amplifier) {}
+public record EffectDescriptor(Holder<MobEffect> entry, int duration, int amplifier) {}

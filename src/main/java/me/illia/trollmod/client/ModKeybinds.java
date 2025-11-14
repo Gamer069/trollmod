@@ -1,22 +1,22 @@
 package me.illia.trollmod.client;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import me.illia.trollmod.Trollmod;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
-import net.minecraft.client.option.KeyBinding;
-import net.minecraft.client.util.InputUtil;
+import net.minecraft.client.KeyMapping;
 import org.lwjgl.glfw.GLFW;
 
 public class ModKeybinds {
-	public static KeyBinding CATCH = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+	public static KeyMapping CATCH = KeyBindingHelper.registerKeyBinding(new KeyMapping(
 		"key.trollmod.catch",
-		InputUtil.Type.KEYSYM,
+		InputConstants.Type.KEYSYM,
 		GLFW.GLFW_KEY_R,
 		"category.trollmod.trollmod"
 	));
 
-	public static KeyBinding PHASE = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+	public static KeyMapping PHASE = KeyBindingHelper.registerKeyBinding(new KeyMapping(
 		"key.trollmod.phase",
-		InputUtil.Type.KEYSYM,
+		InputConstants.Type.KEYSYM,
 		GLFW.GLFW_KEY_T,
 		"category.trollmod.trollmod"
 	));

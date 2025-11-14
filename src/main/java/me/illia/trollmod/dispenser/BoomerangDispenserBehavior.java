@@ -1,40 +1,40 @@
 package me.illia.trollmod.dispenser;
 
-import net.minecraft.block.dispenser.ItemDispenserBehavior;
 import me.illia.trollmod.entity.BoomerangEntity;
-import net.minecraft.block.DispenserBlock;
-import net.minecraft.item.ItemStack;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.BlockPointer;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.BlockSource;
+import net.minecraft.core.Direction;
+import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.DispenserBlock;
+import net.minecraft.world.phys.Vec3;
 
-public class BoomerangDispenserBehavior extends ItemDispenserBehavior {
+public class BoomerangDispenserBehavior extends DefaultDispenseItemBehavior {
 	@Override
-	protected ItemStack dispenseSilently(BlockPointer pointer, ItemStack stack) {
-		ServerWorld world = pointer.getWorld();
-		Direction dir = pointer.getBlockState().get(DispenserBlock.FACING);
-		BlockPos pos = pointer.getPos().offset(dir);
+	protected ItemStack execute(BlockSource pointer, ItemStack stack) {
+		ServerLevel world = pointer.getLevel();
+		Direction dir = pointer.getBlockState().getValue(DispenserBlock.FACING);
+		BlockPos pos = pointer.getPos().relative(dir);
 
-		if (!world.isClient) {
-			BoomerangEntity boomerang = new BoomerangEntity(world, null, stack.getDamage(), pos);
-			Vec3d look = Vec3d.of(dir.getVector());
-			Vec3d horizontal = new Vec3d(look.x, 0, look.z).normalize();
+		if (!world.isClientSide) {
+			BoomerangEntity boomerang = new BoomerangEntity(world, null, stack.getDamageValue(), pos);
+			Vec3 look = Vec3.atLowerCornerOf(dir.getNormal());
+			Vec3 horizontal = new Vec3(look.x, 0, look.z).normalize();
 
-			boomerang.setPosition(
+			boomerang.setPos(
 				pos.getX() + horizontal.x * 0.5,
 				pos.getY(),
 				pos.getZ() + horizontal.z * 0.5
 			);
 
 			double speed = 0.5;
-			boomerang.setVelocity(horizontal.x * speed, 0, horizontal.z * speed);
+			boomerang.setDeltaMovement(horizontal.x * speed, 0, horizontal.z * speed);
 
-			world.spawnEntity(boomerang);
+			world.addFreshEntity(boomerang);
 		}
 
-		stack.damage(1, world.getRandom(), null);
+		stack.hurt(1, world.getRandom(), null);
 
 		return stack;
 	}

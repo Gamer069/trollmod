@@ -1,11 +1,11 @@
 package me.illia.trollmod.mixin;
 
 import me.illia.trollmod.attachment.ModAttachmentTypes;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.ItemEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -17,7 +17,7 @@ import java.util.UUID;
 @Mixin(Entity.class)
 public abstract class EntityMixin {
 	@Shadow
-	private World world;
+	private Level level;
 
 	@Inject(method = "baseTick", at = @At(value = "HEAD"), cancellable = true)
 	private void tick(CallbackInfo ci) {
@@ -25,30 +25,30 @@ public abstract class EntityMixin {
 		UUID uuid = thisEntity.getAttachedOrElse(ModAttachmentTypes.IS_CONTROLLED, null);
 		if (uuid == null) return;
 
-		PlayerEntity player = world.getPlayerByUuid(uuid);
+		Player player = level.getPlayerByUUID(uuid);
 		if (player == null) {
 			thisEntity.setAttached(ModAttachmentTypes.IS_CONTROLLED, null);
-			thisEntity.setGlowing(false);
+			thisEntity.setGlowingTag(false);
 			thisEntity.setNoGravity(false);
 
 			if (thisEntity instanceof ItemEntity itemEntity) {
-				itemEntity.setToDefaultPickupDelay();
+				itemEntity.setDefaultPickUpDelay();
 			}
 
 			return;
 		}
 
-		Vec3d lookDir = player.getRotationVec(1.0f);
-		Vec3d pos = player.getCameraPosVec(1.0f).add(lookDir.multiply(3));
+		Vec3 lookDir = player.getViewVector(1.0f);
+		Vec3 pos = player.getEyePosition(1.0f).add(lookDir.scale(3));
 
 		thisEntity.setNoGravity(true);
 
 		if (thisEntity instanceof ItemEntity itemEntity) {
-			itemEntity.setPickupDelayInfinite();
+			itemEntity.setNeverPickUp();
 		}
 
-		thisEntity.setPosition(pos);
-		thisEntity.setVelocity(Vec3d.ZERO);
-		thisEntity.velocityDirty = true;
+		thisEntity.setPos(pos);
+		thisEntity.setDeltaMovement(Vec3.ZERO);
+		thisEntity.hasImpulse = true;
 	}
 }

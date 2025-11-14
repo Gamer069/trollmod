@@ -1,11 +1,11 @@
 package me.illia.trollmod.mixin;
 
 import me.illia.trollmod.effect.ModEffects;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.input.Input;
-import net.minecraft.client.input.KeyboardInput;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.option.GameOptions;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.Options;
+import net.minecraft.client.player.Input;
+import net.minecraft.client.player.KeyboardInput;
+import net.minecraft.client.player.LocalPlayer;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -17,29 +17,29 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class KeyboardInputMixin extends Input {
 	@Shadow
 	@Final
-	private GameOptions settings;
+	private Options options;
 
 	@Shadow
-	private static float getMovementMultiplier(boolean positive, boolean negative) {
+	private static float calculateImpulse(boolean positive, boolean negative) {
 		return 0;
 	}
 
 	@Inject(method = "tick", at = @At("HEAD"), cancellable = true)
 	private void tick(boolean slowDown, float slowDownFactor, CallbackInfo ci) {
-		MinecraftClient client = MinecraftClient.getInstance();
-		ClientPlayerEntity player = client.player;
-		if (player.hasStatusEffect(ModEffects.INVERT_CONTROLS.value())) {
-			this.pressingForward = this.settings.backKey.isPressed();
-			this.pressingBack = this.settings.forwardKey.isPressed();
-			this.pressingLeft = this.settings.rightKey.isPressed();
-			this.pressingRight = this.settings.leftKey.isPressed();
-			this.movementForward = getMovementMultiplier(this.pressingForward, this.pressingBack);
-			this.movementSideways = getMovementMultiplier(this.pressingLeft, this.pressingRight);
-			this.jumping = this.settings.jumpKey.isPressed();
-			this.sneaking = this.settings.sneakKey.isPressed();
+		Minecraft client = Minecraft.getInstance();
+		LocalPlayer player = client.player;
+		if (player.hasEffect(ModEffects.INVERT_CONTROLS.value())) {
+			this.up = this.options.keyDown.isDown();
+			this.down = this.options.keyUp.isDown();
+			this.left = this.options.keyRight.isDown();
+			this.right = this.options.keyLeft.isDown();
+			this.forwardImpulse = calculateImpulse(this.up, this.down);
+			this.leftImpulse = calculateImpulse(this.left, this.right);
+			this.jumping = this.options.keyJump.isDown();
+			this.shiftKeyDown = this.options.keyShift.isDown();
 			if (slowDown) {
-				this.movementSideways *= slowDownFactor;
-				this.movementForward *= slowDownFactor;
+				this.leftImpulse *= slowDownFactor;
+				this.forwardImpulse *= slowDownFactor;
 			}
 			ci.cancel();
 		}

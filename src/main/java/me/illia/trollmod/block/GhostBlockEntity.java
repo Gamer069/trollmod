@@ -1,19 +1,19 @@
 package me.illia.trollmod.block;
 
 import me.illia.trollmod.Util;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.registry.Registries;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class GhostBlockEntity extends BlockEntity {
 	private Block block;
-	private PlayerEntity owner;
+	private Player owner;
 
 	public GhostBlockEntity(BlockPos pos, BlockState state) {
 		super(ModBlockEntities.GHOST_BLOCK_ENTITY_TYPE, pos, state);
@@ -25,38 +25,38 @@ public class GhostBlockEntity extends BlockEntity {
 
 	public void setBlock(Block block) {
 		this.block = block;
-		markDirty();
+		setChanged();
 	}
 
 	@Override
-	protected void writeNbt(NbtCompound nbt) {
-		super.writeNbt(nbt);
+	protected void saveAdditional(CompoundTag nbt) {
+		super.saveAdditional(nbt);
 
 		if (block != null) {
-			nbt.putString("ghost_block_id", Registries.BLOCK.getId(block).toString());
+			nbt.putString("ghost_block_id", BuiltInRegistries.BLOCK.getKey(block).toString());
 		}
 	}
 
 	@Override
-	public void readNbt(NbtCompound nbt) {
-		super.readNbt(nbt);
+	public void load(CompoundTag nbt) {
+		super.load(nbt);
 
-		if (nbt.contains("ghost_block_id", NbtElement.STRING_TYPE)) {
+		if (nbt.contains("ghost_block_id", Tag.TAG_STRING)) {
 			String idStr = nbt.getString("ghost_block_id");
 			if (idStr != null) {
-				Identifier id = Util.idFrom(idStr);
-				block = Registries.BLOCK.get(id);
+				ResourceLocation id = Util.idFrom(idStr);
+				block = BuiltInRegistries.BLOCK.get(id);
 			}
 		} else {
 			block = null;
 		}
 	}
 
-	public PlayerEntity getOwner() {
+	public Player getOwner() {
 		return owner;
 	}
 
-	public void setOwner(PlayerEntity owner) {
+	public void setOwner(Player owner) {
 		this.owner = owner;
 	}
 }

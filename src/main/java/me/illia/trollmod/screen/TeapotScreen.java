@@ -2,26 +2,24 @@ package me.illia.trollmod.screen;
 
 import me.illia.trollmod.Trollmod;
 import me.illia.trollmod.Util;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.screen.ingame.HandledScreen;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Inventory;
 
-public class TeapotScreen extends HandledScreen<TeapotScreenHandler> {
-	public static final Identifier TEXTURE = Util.id("textures/gui/teapot.png");
+public class TeapotScreen extends AbstractContainerScreen<TeapotScreenHandler> {
+	public static final ResourceLocation TEXTURE = Util.id("textures/gui/teapot.png");
 
-	public TeapotScreen(TeapotScreenHandler handler, PlayerInventory inventory, Text title) {
+	public TeapotScreen(TeapotScreenHandler handler, Inventory inventory, Component title) {
 		super(handler, inventory, title);
 	}
 
 	@Override
-	protected void drawBackground(DrawContext context, float delta, int mouseX, int mouseY) {
-		int x = (width - backgroundWidth) / 2;
-		int y = (height - backgroundHeight) / 2;
+	protected void renderBg(GuiGraphics context, float delta, int mouseX, int mouseY) {
+		int x = (width - imageWidth) / 2;
+		int y = (height - imageHeight) / 2;
 
-		context.drawTexture(TEXTURE, x, y, 0, 0, backgroundWidth, backgroundHeight);
+		context.blit(TEXTURE, x, y, 0, 0, imageWidth, imageHeight);
 	}
 }

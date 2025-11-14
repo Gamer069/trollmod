@@ -1,19 +1,19 @@
 package me.illia.trollmod.mixin;
 
 import net.minecraft.client.color.block.BlockColors;
-import net.minecraft.client.render.block.BlockModelRenderer;
-import net.minecraft.client.render.block.BlockRenderManager;
-import net.minecraft.client.render.item.BuiltinModelItemRenderer;
+import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
+import net.minecraft.client.renderer.block.BlockRenderDispatcher;
+import net.minecraft.client.renderer.block.ModelBlockRenderer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
-@Mixin(BlockRenderManager.class)
+@Mixin(BlockRenderDispatcher.class)
 public interface BlockRenderManagerAccessor {
-	@Accessor("builtinModelItemRenderer")
-	BuiltinModelItemRenderer trollmod$builtinModelItemRenderer();
+	@Accessor("blockEntityRenderer")
+	BlockEntityWithoutLevelRenderer trollmod$builtinModelItemRenderer();
 
-	@Accessor("blockModelRenderer")
-	BlockModelRenderer trollmod$blockModelRenderer();
+	@Accessor("modelRenderer")
+	ModelBlockRenderer trollmod$blockModelRenderer();
 
 	@Accessor("blockColors")
 	BlockColors trollmod$blockColors();

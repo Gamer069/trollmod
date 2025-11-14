@@ -2,46 +2,45 @@ package me.illia.trollmod;
 
 import me.illia.trollmod.effect.EffectDescriptor;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricLanguageProvider;
-import net.minecraft.block.Block;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.effect.StatusEffect;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.potion.Potion;
-import net.minecraft.recipe.BrewingRecipeRegistry;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.util.Identifier;
-
+import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.alchemy.Potion;
+import net.minecraft.world.item.alchemy.PotionBrewing;
+import net.minecraft.world.level.block.Block;
 import java.util.Arrays;
 
 public class Util {
-	public static Identifier id(String path) {
-		return new Identifier(Trollmod.MODID, path);
+	public static ResourceLocation id(String path) {
+		return new ResourceLocation(Trollmod.MODID, path);
 	}
 
-	public static Potion pot(Identifier id, EffectDescriptor... descs) {
+	public static Potion pot(ResourceLocation id, EffectDescriptor... descs) {
 		return Registry.register(
-			Registries.POTION,
+			BuiltInRegistries.POTION,
 			id,
 			new Potion(
 				Arrays.stream(descs).map(desc -> {
-					return new StatusEffectInstance(desc.entry().value(), desc.duration(), desc.amplifier());
-				}).toArray(StatusEffectInstance[]::new)
+					return new MobEffectInstance(desc.entry().value(), desc.duration(), desc.amplifier());
+				}).toArray(MobEffectInstance[]::new)
 			)
 		);
 	}
 
 	public static void potRecipe(Item item, Potion output, Potion... input) {
 		Arrays.stream(input).forEach(pot -> {
-			BrewingRecipeRegistry.registerPotionRecipe(pot, item, output);
+			PotionBrewing.addMix(pot, item, output);
 		});
 	}
 
-	public static EffectDescriptor desc(RegistryEntry<StatusEffect> entry, int duration, int amplifier) {
+	public static EffectDescriptor desc(Holder<MobEffect> entry, int duration, int amplifier) {
 		return new EffectDescriptor(entry, duration, amplifier);
 	}
 
@@ -57,11 +56,11 @@ public class Util {
 		builder.add(key, translation);
 	}
 
-	public static void t(FabricLanguageProvider.TranslationBuilder builder, StatusEffect effect, String translation) {
+	public static void t(FabricLanguageProvider.TranslationBuilder builder, MobEffect effect, String translation) {
 		builder.add(effect, translation);
 	}
 
-	public static void t(FabricLanguageProvider.TranslationBuilder builder, RegistryKey<ItemGroup> group, String translation) {
+	public static void t(FabricLanguageProvider.TranslationBuilder builder, ResourceKey<CreativeModeTab> group, String translation) {
 		builder.add(group, translation);
 	}
 
@@ -69,7 +68,7 @@ public class Util {
 		builder.add(item, translation);
 	}
 
-	public static Identifier idFrom(String idStr) {
-		return new Identifier(idStr);
+	public static ResourceLocation idFrom(String idStr) {
+		return new ResourceLocation(idStr);
 	}
 }

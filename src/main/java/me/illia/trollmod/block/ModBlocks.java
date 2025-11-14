@@ -8,92 +8,91 @@ import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
 import net.fabricmc.fabric.api.registry.StrippableBlockRegistry;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
-import net.minecraft.block.Block;
-import net.minecraft.block.LeavesBlock;
-import net.minecraft.block.PillarBlock;
-import net.minecraft.block.SaplingBlock;
-import net.minecraft.block.SlabBlock;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.StairsBlock;
-import net.minecraft.block.ButtonBlock;
-import net.minecraft.block.FenceBlock;
-import net.minecraft.block.FenceGateBlock;
-import net.minecraft.block.PressurePlateBlock;
-import net.minecraft.block.DoorBlock;
-import net.minecraft.block.TrapdoorBlock;
-
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.ButtonBlock;
+import net.minecraft.world.level.block.DoorBlock;
+import net.minecraft.world.level.block.FenceBlock;
+import net.minecraft.world.level.block.FenceGateBlock;
+import net.minecraft.world.level.block.LeavesBlock;
+import net.minecraft.world.level.block.PressurePlateBlock;
+import net.minecraft.world.level.block.RotatedPillarBlock;
+import net.minecraft.world.level.block.SaplingBlock;
+import net.minecraft.world.level.block.SlabBlock;
+import net.minecraft.world.level.block.StairBlock;
+import net.minecraft.world.level.block.TrapDoorBlock;
 import java.util.ArrayList;
 
 public class ModBlocks {
-	public static final RegistryKey<ItemGroup> BLOCKS_GROUP_KEY = RegistryKey.of(Registries.ITEM_GROUP.getKey(), Util.id("blocks"));
-	public static final ItemGroup BLOCKS_GROUP = FabricItemGroup.builder()
+	public static final ResourceKey<CreativeModeTab> BLOCKS_GROUP_KEY = ResourceKey.create(BuiltInRegistries.CREATIVE_MODE_TAB.key(), Util.id("blocks"));
+	public static final CreativeModeTab BLOCKS_GROUP = FabricItemGroup.builder()
 		.icon(() -> new ItemStack(ModBlocks.PURPLEHEART_LOG))
-		.displayName(Text.translatable("itemGroup.trollmod.blocks", Trollmod.MODID))
+		.title(Component.translatable("itemGroup.trollmod.blocks", Trollmod.MODID))
 		.build();
 
 	public static final ArrayList<Block> BLOCKS = new ArrayList<>();
 	public static final ArrayList<Item> ITEMS = new ArrayList<>();
 
-	public static final Block PURPLEHEART_LOG = register(new PillarBlock(FabricBlockSettings.copyOf(Blocks.OAK_LOG).strength(2f)), "purpleheart_log");
-	public static final Block PURPLEHEART_WOOD = register(new PillarBlock(FabricBlockSettings.copyOf(Blocks.OAK_WOOD).strength(2f)), "purpleheart_wood");
-	public static final Block STRIPPED_PURPLEHEART_LOG = register(new PillarBlock(FabricBlockSettings.copyOf(Blocks.STRIPPED_OAK_LOG).strength(2f)), "stripped_purpleheart_log");
-	public static final Block STRIPPED_PURPLEHEART_WOOD = register(new PillarBlock(FabricBlockSettings.copyOf(Blocks.STRIPPED_OAK_WOOD).strength(2f)), "stripped_purpleheart_wood");
+	public static final Block PURPLEHEART_LOG = register(new RotatedPillarBlock(FabricBlockSettings.copyOf(Blocks.OAK_LOG).strength(2f)), "purpleheart_log");
+	public static final Block PURPLEHEART_WOOD = register(new RotatedPillarBlock(FabricBlockSettings.copyOf(Blocks.OAK_WOOD).strength(2f)), "purpleheart_wood");
+	public static final Block STRIPPED_PURPLEHEART_LOG = register(new RotatedPillarBlock(FabricBlockSettings.copyOf(Blocks.STRIPPED_OAK_LOG).strength(2f)), "stripped_purpleheart_log");
+	public static final Block STRIPPED_PURPLEHEART_WOOD = register(new RotatedPillarBlock(FabricBlockSettings.copyOf(Blocks.STRIPPED_OAK_WOOD).strength(2f)), "stripped_purpleheart_wood");
 
-	public static final Block PURPLEHEART_PLANKS = register(new PillarBlock(FabricBlockSettings.copyOf(Blocks.OAK_PLANKS).strength(2f)), "purpleheart_planks");
-	public static final Block PURPLEHEART_LEAVES = register(new LeavesBlock(FabricBlockSettings.copyOf(Blocks.OAK_LEAVES).strength(.2f).nonOpaque()), "purpleheart_leaves");
-	public static final Block PURPLEHEART_SAPLING = register(new SaplingBlock(new PurpleheartSaplingGenerator(), FabricBlockSettings.copyOf(Blocks.OAK_SAPLING).breakInstantly()), "purpleheart_sapling");
+	public static final Block PURPLEHEART_PLANKS = register(new RotatedPillarBlock(FabricBlockSettings.copyOf(Blocks.OAK_PLANKS).strength(2f)), "purpleheart_planks");
+	public static final Block PURPLEHEART_LEAVES = register(new LeavesBlock(FabricBlockSettings.copyOf(Blocks.OAK_LEAVES).strength(.2f).noOcclusion()), "purpleheart_leaves");
+	public static final Block PURPLEHEART_SAPLING = register(new SaplingBlock(new PurpleheartSaplingGenerator(), FabricBlockSettings.copyOf(Blocks.OAK_SAPLING).instabreak()), "purpleheart_sapling");
 	public static final Block PURPLEHEART_SLAB = register(new SlabBlock(FabricBlockSettings.copyOf(Blocks.OAK_SLAB)), "purpleheart_slab");
-	public static final Block PURPLEHEART_STAIRS = register(new StairsBlock(PURPLEHEART_PLANKS.getDefaultState(), FabricBlockSettings.copyOf(Blocks.OAK_STAIRS)), "purpleheart_stairs");
+	public static final Block PURPLEHEART_STAIRS = register(new StairBlock(PURPLEHEART_PLANKS.defaultBlockState(), FabricBlockSettings.copyOf(Blocks.OAK_STAIRS)), "purpleheart_stairs");
 	public static final Block PURPLEHEART_BUTTON = register(new ButtonBlock(FabricBlockSettings.copyOf(Blocks.OAK_BUTTON), ModSetTypes.PURPLEHEART, 10, true), "purpleheart_button");
 	public static final Block PURPLEHEART_FENCE = register(new FenceBlock(FabricBlockSettings.copyOf(Blocks.OAK_FENCE)), "purpleheart_fence");
 	public static final Block PURPLEHEART_FENCE_GATE = register(new FenceGateBlock(FabricBlockSettings.copyOf(Blocks.OAK_FENCE_GATE), ModWoodTypes.PURPLEHEART), "purpleheart_fence_gate");
-	public static final Block PURPLEHEART_PRESSURE_PLATE = register(new PressurePlateBlock(PressurePlateBlock.ActivationRule.EVERYTHING, FabricBlockSettings.copy(Blocks.OAK_PRESSURE_PLATE), ModSetTypes.PURPLEHEART), "purpleheart_pressure_plate");
+	public static final Block PURPLEHEART_PRESSURE_PLATE = register(new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, FabricBlockSettings.copy(Blocks.OAK_PRESSURE_PLATE), ModSetTypes.PURPLEHEART), "purpleheart_pressure_plate");
 	public static final Block PURPLEHEART_DOOR = register(new DoorBlock(FabricBlockSettings.copyOf(Blocks.OAK_DOOR), ModSetTypes.PURPLEHEART), "purpleheart_door");
-	public static final Block PURPLEHEART_TRAPDOOR = register(new TrapdoorBlock(FabricBlockSettings.copyOf(Blocks.OAK_TRAPDOOR).nonOpaque(), ModSetTypes.PURPLEHEART), "purpleheart_trapdoor");
+	public static final Block PURPLEHEART_TRAPDOOR = register(new TrapDoorBlock(FabricBlockSettings.copyOf(Blocks.OAK_TRAPDOOR).noOcclusion(), ModSetTypes.PURPLEHEART), "purpleheart_trapdoor");
 
 
 
-	public static final Block GHOST_BLOCK = register(new GhostBlock(FabricBlockSettings.create().noCollision()), "ghost_block");
+	public static final Block GHOST_BLOCK = register(new GhostBlock(FabricBlockSettings.of().noCollission()), "ghost_block");
 
-	public static final Block SOUND_BLOCK = register(new SoundBlock(FabricBlockSettings.create()), "sound_block");
+	public static final Block SOUND_BLOCK = register(new SoundBlock(FabricBlockSettings.of()), "sound_block");
 
-	public static final Block SPIKY_BLOCK = register(new SpikyBlock(FabricBlockSettings.create()), "spiky_block");
+	public static final Block SPIKY_BLOCK = register(new SpikyBlock(FabricBlockSettings.of()), "spiky_block");
 
 	public static Block register(Block block, String name) {
-		BlockItem blockItem = new BlockItem(block, new Item.Settings());
-		Identifier id = Util.id(name);
-		Registry.register(Registries.ITEM, id, blockItem);
+		BlockItem blockItem = new BlockItem(block, new Item.Properties());
+		ResourceLocation id = Util.id(name);
+		Registry.register(BuiltInRegistries.ITEM, id, blockItem);
 
 		BLOCKS.add(block);
 
-		return Registry.register(Registries.BLOCK, id, block);
+		return Registry.register(BuiltInRegistries.BLOCK, id, block);
 	}
 
 	public static Block registerWithoutItem(Block block, String name) {
-		return Registry.register(Registries.BLOCK, Util.id(name), block);
+		return Registry.register(BuiltInRegistries.BLOCK, Util.id(name), block);
 	}
 
 	public static void init() {
 		Trollmod.LOGGER.info("Initializing blocks for mod" + Trollmod.MODID);
 
-		Registry.register(Registries.ITEM_GROUP, BLOCKS_GROUP_KEY, BLOCKS_GROUP);
+		Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, BLOCKS_GROUP_KEY, BLOCKS_GROUP);
 
 		ItemGroupEvents.modifyEntriesEvent(BLOCKS_GROUP_KEY).register((itemGroup) -> {
 			for (Block block : BLOCKS) {
-				itemGroup.add(block.asItem());
+				itemGroup.accept(block.asItem());
 			}
 
 			for (Item item : ITEMS) {
-				itemGroup.add(item);
+				itemGroup.accept(item);
 			}
 		});
 

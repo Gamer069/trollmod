@@ -1,10 +1,10 @@
 package me.illia.trollmod.effect;
 
-import net.minecraft.entity.effect.StatusEffect;
-import net.minecraft.entity.effect.StatusEffectCategory;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectCategory;
 
-public class LowGravityEffect extends StatusEffect {
+public class LowGravityEffect extends MobEffect {
 	protected LowGravityEffect() {
-		super(StatusEffectCategory.HARMFUL, 0x7FFFD4);
+		super(MobEffectCategory.HARMFUL, 0x7FFFD4);
 	}
 }

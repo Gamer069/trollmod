@@ -2,34 +2,34 @@ package me.illia.trollmod.entity;
 
 import me.illia.trollmod.damage.ModDamageTypes;
 import me.illia.trollmod.item.ModItems;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.ProjectileEntity;
-import net.minecraft.entity.projectile.ProjectileUtil;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.listener.ClientPlayPacketListener;
-import net.minecraft.network.packet.Packet;
-import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.hit.EntityHitResult;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.entity.projectile.ProjectileUtil;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
 
-public class BoomerangEntity extends ProjectileEntity {
+public class BoomerangEntity extends Projectile {
 	public boolean bounced = false;
 	public int damage = 0;
 	public BlockPos pos;
 
-	public BoomerangEntity(EntityType<? extends ProjectileEntity> entityType, World world) {
+	public BoomerangEntity(EntityType<? extends Projectile> entityType, Level world) {
 		super(entityType, world);
 	}
 
-	public BoomerangEntity(World world, LivingEntity owner, int damage, BlockPos pos) {
+	public BoomerangEntity(Level world, LivingEntity owner, int damage, BlockPos pos) {
 		super(ModEntities.BOOMERANG, world);
 		setOwner(owner);
 		this.damage = damage;
@@ -37,7 +37,7 @@ public class BoomerangEntity extends ProjectileEntity {
 	}
 
 	@Override
-	public boolean canHit() {
+	public boolean isPickable() {
 		return true;
 	}
 
@@ -45,19 +45,19 @@ public class BoomerangEntity extends ProjectileEntity {
 	public void tick() {
 		super.tick();
 
-		this.setPosition(this.getPos().add(this.getVelocity()));
-		this.setYaw(this.getYaw() + 5);
-		this.setVelocity(this.getVelocity().subtract(0.001,0,0.001));
+		this.setPos(this.position().add(this.getDeltaMovement()));
+		this.setYRot(this.getYRot() + 5);
+		this.setDeltaMovement(this.getDeltaMovement().subtract(0.001,0,0.001));
 
-		HitResult hitResult = ProjectileUtil.getCollision(this, this::canHit);
+		HitResult hitResult = ProjectileUtil.getHitResultOnMoveVector(this, this::canHitEntity);
 		if (hitResult.getType() == HitResult.Type.BLOCK) {
-			this.onBlockHit((BlockHitResult)hitResult);
+			this.onHitBlock((BlockHitResult)hitResult);
 		} else if (hitResult.getType() == HitResult.Type.ENTITY) {
-			this.onEntityHit((EntityHitResult)hitResult);
+			this.onHitEntity((EntityHitResult)hitResult);
 		}
 
-		if (getWorld().isClient) {
-			getWorld().addParticle(
+		if (level().isClientSide) {
+			level().addParticle(
 				ParticleTypes.CLOUD,
 				this.getX(),
 				this.getY(),
@@ -68,20 +68,20 @@ public class BoomerangEntity extends ProjectileEntity {
 	}
 
 	@Override
-	protected void initDataTracker() {
+	protected void defineSynchedData() {
 	}
 
 	@Override
-	public Packet<ClientPlayPacketListener> createSpawnPacket() {
-		return new EntitySpawnS2CPacket(this, this.getOwner() != null ? this.getOwner().getId() : 0);
+	public Packet<ClientGamePacketListener> getAddEntityPacket() {
+		return new ClientboundAddEntityPacket(this, this.getOwner() != null ? this.getOwner().getId() : 0);
 	}
 
 	@Override
-	public void onSpawnPacket(EntitySpawnS2CPacket packet) {
-		super.onSpawnPacket(packet);
-		int ownerId = packet.getEntityData();
+	public void recreateFromPacket(ClientboundAddEntityPacket packet) {
+		super.recreateFromPacket(packet);
+		int ownerId = packet.getData();
 		if (ownerId > 0) {
-			Entity owner = this.getWorld().getEntityById(ownerId);
+			Entity owner = this.level().getEntity(ownerId);
 			if (owner instanceof LivingEntity living) {
 				this.setOwner(living);
 			}
@@ -89,23 +89,23 @@ public class BoomerangEntity extends ProjectileEntity {
 	}
 
 	@Override
-	protected void onBlockHit(BlockHitResult blockHitResult) {
+	protected void onHitBlock(BlockHitResult blockHitResult) {
 		if (!blockHitResult.getBlockPos().equals(pos)) {
-			setVelocity(getVelocity().multiply(-1));
+			setDeltaMovement(getDeltaMovement().scale(-1));
 			bounced = true;
-			getWorld().breakBlock(blockHitResult.getBlockPos(), true, this);
+			level().destroyBlock(blockHitResult.getBlockPos(), true, this);
 		}
 	}
 
-	public void give(PlayerEntity player, boolean disableIfDamage) {
-		ItemStack boomerang = ModItems.BOOMERANG.getDefaultStack();
+	public void give(Player player, boolean disableIfDamage) {
+		ItemStack boomerang = ModItems.BOOMERANG.getDefaultInstance();
 
-		if (player instanceof ServerPlayerEntity serverPlayerEntity) {
+		if (player instanceof ServerPlayer serverPlayerEntity) {
 			if (damage + 1 < boomerang.getMaxDamage()) {
-				boomerang.damage(1 + damage, getWorld().getRandom(), serverPlayerEntity);
+				boomerang.hurt(1 + damage, level().getRandom(), serverPlayerEntity);
 
-				if (player.getInventory().getEmptySlot() != -1) {
-					player.getInventory().setStack(player.getInventory().getEmptySlot(), boomerang);
+				if (player.getInventory().getFreeSlot() != -1) {
+					player.getInventory().setItem(player.getInventory().getFreeSlot(), boomerang);
 
 					this.discard();
 				}
@@ -116,12 +116,12 @@ public class BoomerangEntity extends ProjectileEntity {
 	}
 
 	@Override
-	public void onPlayerCollision(PlayerEntity player) {
-		if (getOwner() != null && !player.getUuidAsString().equals(getOwner().getUuidAsString())) {
+	public void playerTouch(Player player) {
+		if (getOwner() != null && !player.getStringUUID().equals(getOwner().getStringUUID())) {
 			this.discard();
-			player.damage(ModDamageTypes.of(player.getWorld(), ModDamageTypes.BOOMERANG_DAMAGE_TYPE_KEY), 5);
+			player.hurt(ModDamageTypes.of(player.level(), ModDamageTypes.BOOMERANG_DAMAGE_TYPE_KEY), 5);
 
-			setVelocity(getVelocity().multiply(-0.85));
+			setDeltaMovement(getDeltaMovement().scale(-0.85));
 			bounced = true;
 		} else if (bounced) {
 			give(player, true);
@@ -129,16 +129,16 @@ public class BoomerangEntity extends ProjectileEntity {
 	}
 
 	@Override
-	protected void onEntityHit(EntityHitResult entityHitResult) {
+	protected void onHitEntity(EntityHitResult entityHitResult) {
 		Entity entity = entityHitResult.getEntity();
-		if (entity instanceof PlayerEntity player) {
-			onPlayerCollision(player);
+		if (entity instanceof Player player) {
+			playerTouch(player);
 			return;
 		}
 
-		entity.damage(ModDamageTypes.of(entity.getWorld(), ModDamageTypes.BOOMERANG_DAMAGE_TYPE_KEY), 5);
-		setVelocity(getVelocity().multiply(-0.85));
+		entity.hurt(ModDamageTypes.of(entity.level(), ModDamageTypes.BOOMERANG_DAMAGE_TYPE_KEY), 5);
+		setDeltaMovement(getDeltaMovement().scale(-0.85));
 		bounced = true;
-		super.onEntityHit(entityHitResult);
+		super.onHitEntity(entityHitResult);
 	}
 }

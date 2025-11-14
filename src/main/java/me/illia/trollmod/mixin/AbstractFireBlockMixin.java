@@ -1,26 +1,25 @@
 package me.illia.trollmod.mixin;
 
-import net.minecraft.block.AbstractFireBlock;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.ItemEntity;
-import net.minecraft.entity.projectile.thrown.SnowballEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.projectile.Snowball;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.BaseFireBlock;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(AbstractFireBlock.class)
+@Mixin(BaseFireBlock.class)
 public class AbstractFireBlockMixin {
-	@Inject(method = "onEntityCollision", at = @At("HEAD"), cancellable = true)
-	private void collide(BlockState state, World world, BlockPos pos, Entity entity, CallbackInfo ci) {
-		if (entity instanceof SnowballEntity snowball) {
+	@Inject(method = "entityInside", at = @At("HEAD"), cancellable = true)
+	private void collide(BlockState state, Level world, BlockPos pos, Entity entity, CallbackInfo ci) {
+		if (entity instanceof Snowball snowball) {
 			snowball.discard();
 
-			world.setBlockState(pos, Blocks.AIR.getDefaultState());
+			world.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
 
 			ci.cancel();
 		}

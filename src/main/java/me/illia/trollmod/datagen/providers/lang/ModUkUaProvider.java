@@ -29,8 +29,8 @@ public class ModUkUaProvider extends FabricLanguageProvider {
 
 		Util.t(t, ModEntities.HOT_AIR_BALLOON, "Повітряна куля");
 
-		Util.t(t, ModKeybinds.CATCH.getTranslationKey(), "Спіймати бумеранг");
-		Util.t(t, ModKeybinds.PHASE.getTranslationKey(), "Фазувати");
+		Util.t(t, ModKeybinds.CATCH.getName(), "Спіймати бумеранг");
+		Util.t(t, ModKeybinds.PHASE.getName(), "Фазувати");
 		Util.t(t, ModKeybinds.CATCH.getCategory(), "trollmod");
 
 		Util.t(t, ModItems.ITEMS_GROUP_KEY, "%1$s предмети");

@@ -9,11 +9,11 @@ import me.illia.trollmod.component.PhasingComponent;
 import me.illia.trollmod.item.ModItems;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.hud.InGameHud;
-import net.minecraft.client.gui.hud.PlayerListHud;
-import net.minecraft.item.ItemStack;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.PlayerTabOverlay;
+import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -21,57 +21,57 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(InGameHud.class)
+@Mixin(Gui.class)
 @Environment(EnvType.CLIENT)
 public class InGameHudMixin {
-	@Shadow private int scaledWidth;
-	@Shadow private int scaledHeight;
+	@Shadow private int screenWidth;
+	@Shadow private int screenHeight;
 
-	@Shadow @Final private PlayerListHud playerListHud;
+	@Shadow @Final private PlayerTabOverlay tabList;
 
-	@Shadow @Final private MinecraftClient client;
+	@Shadow @Final private Minecraft minecraft;
 
 	@Inject(method = "renderHotbar", at = @At("TAIL"))
-	public void renderHotbar(float tickDelta, DrawContext context, CallbackInfo ci) {
-		int x = scaledWidth / 2 - 90 + 9 * 20 + 2;
-		int y = scaledHeight - 16 - 3;
+	public void renderHotbar(float tickDelta, GuiGraphics context, CallbackInfo ci) {
+		int x = screenWidth / 2 - 90 + 9 * 20 + 2;
+		int y = screenHeight - 16 - 3;
 		ItemStack stack = new ItemStack(ModItems.BOOMERANG);
 
-		context.getMatrices().push();
+		context.pose().pushPose();
 
 		RenderSystem.setShaderColor(0.2f, 0.2f, 0.2f, 1.0f);
 
 		for (int dx = -1; dx <= 1; dx++) {
 			for (int dy = -1; dy <= 1; dy++) {
 				if (dx == 0 && dy == 0) continue;
-				context.getMatrices().push();
-				context.getMatrices().translate(dx, dy, 0);
-				context.drawItem(stack, x, y);
-				context.getMatrices().pop();
+				context.pose().pushPose();
+				context.pose().translate(dx, dy, 0);
+				context.renderItem(stack, x, y);
+				context.pose().popPose();
 			}
 		}
 
-		context.getMatrices().push();
-		context.getMatrices().translate(0, 0, 0);
-		context.drawItem(stack, x, y);
-		context.getMatrices().pop();
+		context.pose().pushPose();
+		context.pose().translate(0, 0, 0);
+		context.renderItem(stack, x, y);
+		context.pose().popPose();
 
-		context.getMatrices().pop();
+		context.pose().popPose();
 
 		RenderSystem.setShaderColor(1, 1, 1, 1);
 
-		BoomerangCatchComponent comp = client.player.getComponent(ModComponents.BOOMERANG_CATCH_COMPONENT_KEY);
+		BoomerangCatchComponent comp = minecraft.player.getComponent(ModComponents.BOOMERANG_CATCH_COMPONENT_KEY);
 		if (comp.isWithin()) {
-			context.drawItem(stack, x, y);
+			context.renderItem(stack, x, y);
 		}
 
-		PhasingComponent phasingComp = client.player.getComponent(ModComponents.PHASING_COMPONENT_KEY);
+		PhasingComponent phasingComp = minecraft.player.getComponent(ModComponents.PHASING_COMPONENT_KEY);
 		int ticksLeft = phasingComp.getTicksLeft();
 		int maxTicks = TrollmodClient.PHASE_TIME; // max duration in ticks
 		if (ticksLeft > 0) {
 			int barWidth = 100;
 			int barHeight = 6;
-			int barY = (client.player.isCreative() || client.player.isSpectator()) ? y - 20 : y - 40;
+			int barY = (minecraft.player.isCreative() || minecraft.player.isSpectator()) ? y - 20 : y - 40;
 			int barX = x - 100;
 			// Calculate progress (0.0 to 1.0)
 			float progress = ticksLeft / (float)maxTicks;
@@ -115,13 +115,13 @@ public class InGameHudMixin {
 			int yellowDividerX = barX + (int)(0.33f * barWidth);
 
 			// Draw divider between yellow and green (at 66%)
-			context.drawVerticalLine(greenDividerX, barY, barY + barHeight, dividerColor);
+			context.vLine(greenDividerX, barY, barY + barHeight, dividerColor);
 
 			// Draw divider between red and yellow (at 33%)
-			context.drawVerticalLine(yellowDividerX, barY, barY + barHeight, dividerColor);
+			context.vLine(yellowDividerX, barY, barY + barHeight, dividerColor);
 
 			// Draw border
-			context.drawBorder(barX, barY, barWidth, barHeight, 0xFFFFFFFF);
+			context.renderOutline(barX, barY, barWidth, barHeight, 0xFFFFFFFF);
 		}
 	}
 }

@@ -1,15 +1,15 @@
 package me.illia.trollmod.world.tree;
 
 import me.illia.trollmod.world.ModConfiguredFeatures;
-import net.minecraft.block.sapling.SaplingGenerator;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.world.gen.feature.ConfiguredFeature;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.block.grower.AbstractTreeGrower;
+import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import org.jetbrains.annotations.Nullable;
 
-public class PurpleheartSaplingGenerator extends SaplingGenerator {
+public class PurpleheartSaplingGenerator extends AbstractTreeGrower {
 	@Override
-	protected @Nullable RegistryKey<ConfiguredFeature<?, ?>> getTreeFeature(Random random, boolean bees) {
+	protected @Nullable ResourceKey<ConfiguredFeature<?, ?>> getConfiguredFeature(RandomSource random, boolean bees) {
 		return ModConfiguredFeatures.PURPLEHEART_KEY;
 	}
 }
